@@ -1,4 +1,4 @@
-#import"template_2A.typ":*
+#import"template_Rapport.typ":*
 
 #show: project.with(
   title: "Rapport Bureau Etude --- Automatique",
@@ -69,14 +69,25 @@ Nous allons tester différentes situations à l’aide de ce tableau de données
 Il faut noter que la courbe bleue représente la position de notre système (qui doit tendre vers 0 pour se stabiliser), tandis que la courbe jaune représente la tension nécessaire au contrôle du système afin de le stabiliser.
 
 #figure(
-  image("Courbe1.png", width: 48%),
-  caption: [Cas 1.1 : Sortie de l'oscilloscope Etats]
+  grid(
+  columns: (220pt, auto),
+  gutter: 10pt,
+  [
+    #box(image("Courbe1.png", width: 100%))
+    
+  ],
+  [
+
+    #box(image("Courbe1c.png", width: 100%))
+    
+  ]
+),
+
+
+  caption : [Courbe Etat, Contrôle pour le cas 1.1]
 )
 
-#figure(
-  image("Courbe2c.png", width: 48%),
-  caption: [Cas 1.1 : Sortie de l'oscilloscope Contrôle]
-)
+  
 
 #pagebreak()
 
@@ -106,14 +117,22 @@ Tout comme au début du TP02, au départ, seul le point initial est modifié afi
 Retrouvons dès à présent les différents résultats :
 
 #figure(
-  image("Courbe1.1eTp03.png", width: 48%),
-  caption: [Cas 1.1 : Sortie de l'oscilloscope Etats]
-)
-\
+  grid(
+  columns: (220pt, auto),
+  gutter: 10pt,
+  [
+    #box(image("Courbe1.1eTp03.png", width: 100%))
+    
+  ],
+  [
 
-#figure(
-  image("Courbe1.2cTp03.png", width: 48%),
-  caption: [Cas 1.1 : Sortie de l'oscilloscope Contrôle]
+    #box(image("Courbe1.2cTp03.png", width: 100%))
+    
+  ]
+),
+
+
+  caption : [Courbe Etat, Contrôle pour le cas 1.1]
 )
 \
 
@@ -121,21 +140,33 @@ Retrouvons dès à présent les différents résultats :
 
 
 #figure(
-  image("Courbe1.2eTp03.png", width: 48%),
-  caption: [Cas 1.2 : Sortie de l'oscilloscope Etats]
+  grid(
+  columns: (220pt, auto),
+  gutter: 10pt,
+  [
+    #box(image("Courbe1.2eTp03.png", width: 100%))
+    
+  ],
+  [
+
+    #box(image("Courbe1.1cTp03.png", width: 100%))
+    
+  ]
+),
+
+
+  caption : [Courbe Etat, Contrôle pour le cas 1.2]
 )
 \
 
-#figure(
-  image("Courbe1.1cTp03.png", width: 48%),
-  caption: [Cas 1.2 : Sortie de l'oscilloscope Contrôle]
-)
-
-
 Courbe bleue : angle d’inclinaison du robot\
+
 Courbe orange : vitesse moyenne des roues du robot\
+
 Courbe jaune : angle moyen des roues du robot\
+
 Courbe verte : vitesse de changement d’angle du robot.\
+
 
 On constate d’abord une forte augmentation des vitesses (des roues et de changement d’angle) au début de la simulation : le système effectue une régulation importante afin de stabiliser le robot. Par la suite, lorsque l’angle du robot passe d’un côté à l’autre de la valeur nulle, les vitesses tentent de réguler, de moins en moins fort, en sens inverse. Finalement, c’est au bout de deux secondes que le système atteint l’équilibre, puisque toutes les courbes convergent vers 0.
 \
@@ -145,14 +176,22 @@ On constate d’abord une forte augmentation des vitesses (des roues et de chang
 \
 
 #figure(
-  image("Courbe1.3eTp03.png", width: 48%),
-  caption: [Cas 1.3 : Sortie de l'oscilloscope Etats]
-)
-\
+  grid(
+  columns: (220pt, auto),
+  gutter: 10pt,
+  [
+    #box(image("Courbe1.3eTp03.png", width: 100%))
+    
+  ],
+  [
 
-#figure(
-  image("Courbe1.3cTp03.png", width: 48%),
-  caption: [Cas 1.3 : Sortie de l'oscilloscope Contrôle]
+    #box(image("Courbe1.3cTp03.png", width: 100%))
+    
+  ]
+),
+
+
+  caption : [Courbe Etat, Contrôle pour le cas 1.3]
 )
 \
 
@@ -166,28 +205,44 @@ Nous ajoutons à présent un modèle de capteurs, qui simulent les informations 
 Puisqu’il nous manque deux informations pour compléter le retour d’état, nous allons les retrouver à l’aide d’un intégrateur et d’un dérivateur, ces derniers étant implémentés dans un bloc “Prédicteur”.
 
 #figure(
-  image("Courbe1.1eTp03.png", width: 48%),
-  caption: [Cas 1.1 : Sortie de l'oscilloscope Etats]
-)
-\
+  grid(
+  columns: (220pt, auto),
+  gutter: 10pt,
+  [
+    #box(image("Courbe1.1eTp03.png", width: 100%))
+    
+  ],
+  [
 
-#figure(
-  image("Courbe1.2cTp03.png", width: 48%),
-  caption: [Cas 1.1 : Sortie de l'oscilloscope Contrôle]
+    #box(image("Courbe1.2cTp03.png", width: 100%))
+    
+  ]
+),
+
+
+  caption : [Courbe Etat, Contrôle pour le cas 1.1]
 )
 \
 
 Similaire au cas 1.1 de la partie précédente, un état initial à l’équilibre amène naturellement à une non-réaction de la part du système.
 
 #figure(
-  image("Courbe1.2ex2eTp03.png", width: 48%),
-  caption: [Cas 1.2 : Sortie de l'oscilloscope Etats]
-)
-\
+  grid(
+  columns: (220pt, auto),
+  gutter: 10pt,
+  [
+    #box(image("Courbe1.2ex2eTp03.png", width: 100%))
+    
+  ],
+  [
 
-#figure(
-  image("Courbe1.2ex2cTp03.png", width: 48%),
-  caption: [Cas 1.2 : Sortie de l'oscilloscope Contrôle]
+    #box(image("Courbe1.2ex2cTp03.png", width: 100%))
+    
+  ]
+),
+
+
+  caption : [Courbe Etat, Contrôle pour le cas 1.2]
 )
 \
 
@@ -196,14 +251,22 @@ La courbe jaune, soit l’angle d’inclinaison du robot, ne converge plus vers 
 Le système est plus lent à se stabiliser : on se rapproche bien d’une situation réelle grâce aux capteurs modélisés.
 
 #figure(
-  image("Courbe1.3ex2eTp03.png", width: 48%),
-  caption: [Cas 1.3 : Sortie de l'oscilloscope Etats]
-)
-\
+  grid(
+  columns: (220pt, auto),
+  gutter: 10pt,
+  [
+    #box(image("Courbe1.3ex2eTp03.png", width: 100%))
+    
+  ],
+  [
 
-#figure(
-  image("Courbe1.3ex2cTp03.png", width: 48%),
-  caption: [Cas 1.3 : Sortie de l'oscilloscope Contrôle]
+    #box(image("Courbe1.3ex2cTp03.png", width: 100%))
+    
+  ]
+),
+
+
+  caption : [Courbe Etat, Contrôle pour le cas 1.3]
 )
 \
 
@@ -217,42 +280,66 @@ En réalité, l’implantation du modèle réalisé dans le robot se fera en mod
 Suite à cela, nous obtenons les résultats suivant :
 
 #figure(
-  image("Courbe1.1eTp03.png", width: 48%),
-  caption: [Cas 1.1 : Sortie de l'oscilloscope Etats]
-)
-\
+  grid(
+  columns: (220pt, auto),
+  gutter: 10pt,
+  [
+    #box(image("Courbe1.1eTp03.png", width: 100%))
+    
+  ],
+  [
 
-#figure(
-  image("Courbe1.2cTp03.png", width: 48%),
-  caption: [Cas 1.1 : Sortie de l'oscilloscope Contrôle]
+    #box(image("Courbe1.2cTp03.png", width: 100%))
+    
+  ]
+),
+
+
+  caption : [Courbe Etat, Contrôle pour le cas 1.1]
 )
 \
 
 L’état initial nul est et doit toujours être le même : c’est bien le cas une nouvelle fois.
 
 #figure(
-  image("Courbe1.2ex3eTp03.png", width: 48%),
-  caption: [Cas 1.2 : Sortie de l'oscilloscope Etats]
-)
-\
+  grid(
+  columns: (220pt, auto),
+  gutter: 10pt,
+  [
+    #box(image("Courbe1.2ex3eTp03.png", width: 100%))
+    
+  ],
+  [
 
-#figure(
-  image("Courbe1.2ex3cTp03.png", width: 48%),
-  caption: [Cas 1.2 : Sortie de l'oscilloscope Contrôle]
+    #box(image("Courbe1.2ex3cTp03.png", width: 100%))
+    
+  ]
+),
+
+
+  caption : [Courbe Etat, Contrôle pour le cas 1.2]
 )
 \
 
 On constate une déformation des courbes : elles sont à présent en escalier. Nous sommes bien sur une discrétisation de ces dernières comme désiré. Assurément, le système réagit tout aussi bien qu’avant.
 
 #figure(
-  image("Courbe1.3ex3eTp03.png", width: 48%),
-  caption: [Cas 1.3 : Sortie de l'oscilloscope Etats]
-)
-\
+  grid(
+  columns: (220pt, auto),
+  gutter: 10pt,
+  [
+    #box(image("Courbe1.3ex3eTp03.png", width: 100%))
+    
+  ],
+  [
 
-#figure(
-  image("Courbe1.3ex3cTp03.png", width: 48%),
-  caption: [Cas 1.3 : Sortie de l'oscilloscope Contrôle]
+    #box(image("Courbe1.3ex3cTp03.png", width: 100%))
+    
+  ]
+),
+
+
+  caption : [Courbe Etat, Contrôle pour le cas 1.3]
 )
 \
 
