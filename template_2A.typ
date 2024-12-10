@@ -9,12 +9,12 @@
   columns: (2.5fr, auto),
   gutter: 4.5em,
   [
-    #box(figure(image("INP.jpeg", width: 10em))),
+    #box(image("INP.jpeg", width: 10em)),
     
   ],
   [
 
-    #box(figure(image("ENSEEIHT_logo.png", width: 11em)))
+    #box(image("ENSEEIHT_logo.png", width: 11em))
     
   ]
 )
@@ -48,7 +48,7 @@
   pad(
     top: 0.5em,
     x: 2em,
-    align(text("professeur"+ if teachers.len()>1 {"s"} + " : ", size: 1.25em),center),
+    align(text("Professeur"+ if teachers.len()>1 {"s"} + " : ", size: 1.25em),center),
   )
   // here I write all the teachers
   pad(
@@ -76,16 +76,22 @@
 )
 
   align(line(length: 95%, stroke: black),right)
-
+  
   align(text("",size : 23pt),center)
   pagebreak()
   // table of contents.
   outline( depth: profondeur , indent : 2em )
 
   pagebreak()
-  // main body.
-  set par(justify: true)
+  // main body.  
+  set par(
+  first-line-indent: 20pt,
+  spacing: 10pt,
+  justify: true,
+)
+
   body
+  
   
 }
 
