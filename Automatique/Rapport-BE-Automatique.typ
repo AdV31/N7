@@ -224,6 +224,24 @@ A présent, la réalité ne nous permettra pas d’obtenir toutes les informatio
 Pour ce faire, nous allons modéliser ce capteur que nous allons implémenter dans notre schéma Simulink actuel, mais cela ne résout toujours pas le problème : il nous manque la position angulaire.
 
 C’est alors que nous allons aussi modéliser une partie “Prédicteurs”, qui va nous permettre de récupérer cette donnée manquante à l’aide de celle actuellement à notre disposition :
+#figure(
+  grid(
+  columns: (220pt, auto),
+  gutter: 10pt,
+  [
+    #box(image("Tp02SimulinkCapteur.png", width: 100%))
+    
+  ],
+  [
+
+    #box(image("Tp02SimulinkPredicteur.png", width: 100%))
+    
+  ]
+),
+
+
+  caption : [capteur et predicteur du module Simulink]
+)
 \
 
 A l’aide d’un intégrateur, nous arrivons à récupérer notre donnée manquante et ainsi mettre en marche notre retour d’état comme convenu.
@@ -312,6 +330,10 @@ Cette fois, le pas étant bien plus important, le système ne réagit pas comme 
 \
 
 A présent, nous allons modéliser et simuler le robot Lego pendule inversé puis constater les résultats obtenus. Nous débuterons par un modèle Simulink continu qui est le suivant :
+#figure(
+  image("Tp03Simulinkglobal.png"),
+  caption: [Schema de modelisation du robot]
+)
 \
 
 == Contrôle par retour d'état
@@ -418,6 +440,26 @@ Le comportement est similaire au cas 1.2, cependant le système met un petit peu
 
 Nous ajoutons à présent un modèle de capteurs, qui simulent les informations que l’on récupérerait en réalité, à savoir la vitesse moyenne des roues du robot (Ѱ’), ainsi que l’angle (Θ).
 Puisqu’il nous manque deux informations pour compléter le retour d’état, nous allons les retrouver à l’aide d’un intégrateur et d’un dérivateur, ces derniers étant implémentés dans un bloc “Prédicteur”.
+
+#figure(
+  grid(
+  columns: (220pt, auto),
+  gutter: 10pt,
+  [
+    #box(image("Tp03SimulinkCapteur.png", width: 100%))
+    
+  ],
+  [
+
+    #box(image("Tp03SimulinkPredicteur.png", width: 100%))
+    
+  ]
+),
+
+
+  caption : [capteur et predicteur en mode discret du module Simulink]
+)
+\
 
 #figure(
   grid(
