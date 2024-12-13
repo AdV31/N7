@@ -89,7 +89,7 @@ Enfin, il nous a été primordial de bien gérer notre temps, afin de pouvoir av
 
 === De Adrien VIGNAUX
 \
-
+Ce projet est très enrichissant au niveaux du travail en équipe car c'est le premier projet long que l'on fait à deux.
 
 === De Enzo BLANCHARD
 \
