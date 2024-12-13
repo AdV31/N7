@@ -56,9 +56,10 @@ Notre projet se regroupe en plusieurs fichiers qui seront explicités au fur et 
 - Le fichier test_compresser.adb : fichier de réalisation de tests assurant le bon fonctionnement de compression du texte ;
 - Le fichier test_decompresser.adb : fichier de réalisation de tests assurant le bon fonctionnement de décompression du texte.
 
-== Choix éfféctués
+== Choix effectués
 
-== Architechture de l'application mobile
+
+== Architecture de l'application mobile
 
 == Principaux algorithmes
 
@@ -84,7 +85,7 @@ Enfin, il nous a été primordial de bien gérer notre temps, afin de pouvoir av
 
 == Bilan technique
 
-== Bilan personel et collectif
+== Bilan personnel et collectif
 
 === De Adrien VIGNAUX
 \

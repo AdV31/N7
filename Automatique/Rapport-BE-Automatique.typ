@@ -53,7 +53,7 @@ Pour réaliser ce système, nous devons écrire un retour d’état de la forme 
 A l’aide des conditions énoncés au début, voici ce qu’il en résulte sur Simulink :
 #figure(
   image("Schema simulink Tp02 1.2.jpg"),
-  caption: [Premier schema de modelisation du pendule inversé]
+  caption: [Premier schéma de modélisation du pendule inversé]
 )
 \
 
@@ -97,7 +97,7 @@ C’est une situation qui répond bien aux critères exigés.
   columns: (220pt, auto),
   gutter: 10pt,
   [
-    #box(image("Courbe2e.png", width: 100%))
+    #box(image("Courbe2E.png", width: 100%))
     
   ],
   [
@@ -121,7 +121,7 @@ Il faut donc bien choisir ce paramètre afin d’optimiser les performances du s
   columns: (220pt, auto),
   gutter: 10pt,
   [
-    #box(image("Courbe3e.png", width: 100%))
+    #box(image("Courbe3E.png", width: 100%))
     
   ],
   [
@@ -146,7 +146,7 @@ Il est donc important de bien identifier quel intégrateur est profitable à not
   columns: (220pt, auto),
   gutter: 10pt,
   [
-    #box(image("Courbe4e.png", width: 100%))
+    #box(image("Courbe4E.png", width: 100%))
     
   ],
   [
@@ -259,12 +259,12 @@ Réalisons quelques tests pour confirmer le bon fonctionnement de notre modèle 
   columns: (220pt, auto),
   gutter: 10pt,
   [
-    #box(image("Courbecas1E.png", width: 100%))
+    #box(image("CourbeCas1E.png", width: 100%))
     
   ],
   [
 
-    #box(image("Courbecas1c.png", width: 100%))
+    #box(image("CourbeCas1c.png", width: 100%))
     
   ]
 ),
@@ -283,12 +283,12 @@ En revanche, ce n’est rien d’alarmant, puisque notre système respecte toujo
   columns: (220pt, auto),
   gutter: 10pt,
   [
-    #box(image("Courbecas2E.png", width: 100%))
+    #box(image("CourbeCas2e.png", width: 100%))
     
   ],
   [
 
-    #box(image("Courbecas2c.png", width: 100%))
+    #box(image("CourbeCas2c.png", width: 100%))
     
   ]
 ),
@@ -305,12 +305,12 @@ La méthode d’intégration d’Euler fonctionne de manière presque identique 
   columns: (220pt, auto),
   gutter: 10pt,
   [
-    #box(image("Courbecas3E.png", width: 100%))
+    #box(image("CourbeCas3e.png", width: 100%))
     
   ],
   [
 
-    #box(image("Courbecas3c.png", width: 100%))
+    #box(image("CourbeCas3c.png", width: 100%))
     
   ]
 ),
@@ -332,7 +332,7 @@ Cette fois, le pas étant bien plus important, le système ne réagit pas comme 
 A présent, nous allons modéliser et simuler le robot Lego pendule inversé puis constater les résultats obtenus. Nous débuterons par un modèle Simulink continu qui est le suivant :
 #figure(
   image("Tp03Simulinkglobal.png"),
-  caption: [Schema de modelisation du robot]
+  caption: [Schéma de modélisation du robot]
 )
 \
 
@@ -451,13 +451,13 @@ Puisqu’il nous manque deux informations pour compléter le retour d’état, n
   ],
   [
 
-    #box(image("Tp03SimulinkPredicteur.png", width: 100%))
+    #box(image("Tp03Simulinkpredicteur.png", width: 100%))
     
   ]
 ),
 
 
-  caption : [capteur et predicteur en mode discret du module Simulink]
+  caption : [Capteur et Prédicteur en mode discret du module Simulink]
 )
 \
 
@@ -527,7 +527,7 @@ Le système est plus lent à se stabiliser : on se rapproche bien d’une situat
 )
 \
 
-On a le même attendu qu’entre les figures X et X de l’étape précédente.
+On a le même attendu qu’entre les graphes figure 18 de l’étape précédente.
 
 == Passage en mode discret
 \
