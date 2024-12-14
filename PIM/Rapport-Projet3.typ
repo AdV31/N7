@@ -59,22 +59,22 @@ Notre projet se regroupe en plusieurs fichiers qui seront explicités au fur et 
 == Choix effectués
 \
 
-Nous avons choisis pour la structure de l'arbre, une liste chainé car c'était la structure que l'on a le plus manipulé jusqu'ici.
+Nous avons choisi pour la structure de l'arbre, une liste chaînée car c'était la structure que l'on a le plus manipulé jusqu'ici.
 
-Nous avons aussi choisis de mettre la capacité en paramètre de généricité pour pouvoir définir des tableaux de taille du nombre de caractère différent dans le texte.
+Nous avons aussi choisi de mettre la capacité en paramètre de généricité pour pouvoir définir des tableaux de taille du nombre de caractère différents dans le texte.
 
 == Architecture de l'application modules
 \
 
-Nous avons choisis de faire deux modules. Un premier module qui gère tout les sous-programmes, lié à l'arbre. Un autre Qui est générique pour pouvoir définir plusieurs tableaux différents.
+Nous avons choisi de faire deux modules. Un premier module qui gère tout les sous-programmes, lié à l'arbre. Un autre qui est générique pour pouvoir définir plusieurs tableaux différents.
 
 == Principaux algorithmes
 \
 
-- Trie_Table
+- Tri_Table
 - Ecrire_Octet
 - Arbre_Huffman
-- Créer_Table_Huffman
+- Creer_Table_Huffman
 - Compresser_Texte
 
 == Démarches de test
