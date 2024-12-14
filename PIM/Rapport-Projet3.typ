@@ -57,11 +57,25 @@ Notre projet se regroupe en plusieurs fichiers qui seront explicités au fur et 
 - Le fichier test_decompresser.adb : fichier de réalisation de tests assurant le bon fonctionnement de décompression du texte.
 
 == Choix effectués
+\
 
+Nous avons choisis pour la structure de l'arbre, une liste chainé car c'était la structure que l'on a le plus manipulé jusqu'ici.
 
-== Architecture de l'application mobile
+Nous avons aussi choisis de mettre la capacité en paramètre de généricité pour pouvoir définir des tableaux de taille du nombre de caractère différent dans le texte.
+
+== Architecture de l'application modules
+\
+
+Nous avons choisis de faire deux modules. Un premier module qui gère tout les sous-programmes, lié à l'arbre. Un autre Qui est générique pour pouvoir définir plusieurs tableaux différents.
 
 == Principaux algorithmes
+\
+
+- Trie_Table
+- Ecrire_Octet
+- Arbre_Huffman
+- Créer_Table_Huffman
+- Compresser_Texte
 
 == Démarches de test
 
@@ -89,7 +103,7 @@ Enfin, il nous a été primordial de bien gérer notre temps, afin de pouvoir av
 
 === De Adrien VIGNAUX
 \
-Ce projet est très enrichissant au niveaux du travail en équipe car c'est le premier projet long que l'on fait à deux.
+Ce projet est très enrichissant au niveau du travail en équipe car c'est le premier projet long que l'on fait à deux.
 
 === De Enzo BLANCHARD
 \
