@@ -162,9 +162,27 @@ La seule subtilité ici, c’est le caractère de fin de fichier : lorsque tout 
 \
 
 Passons maintenant aux sous-programmes du fichier decompresser.adb :\
+\
+
 - Decoder_Table_Huffman :
+Les premiers octets du fichier compressé représentent les éléments contenus dans la table de Huffman. Nous avons donc besoin d’un sous-programme qui recrée cette dernière en décodant les octets concernés.
+Rappelons que, pour indiquer la fin de lecture des octets de la table de Huffman, nous avons doublé l’écriture du dernier caractère. Nous enregistrons donc l’octet précédent que nous comparons à l’octet précédent, puis nous effectuons la conversion de l’octet courant en caractère, s’inscrivant dans la table dans l’ordre conventionnel, jusqu’à ce que ces deux octets soient similaires.\
+\
+
+
 - Reconstruire_Arbre_Huffman :
-- Decoder_Texte :
+À présent, nous allons pouvoir recréer l’arbre de Huffman puisque nous avons toutes les informations permettant de le remplir. Pour ce faire, nous utilisons les bits représentant la signature de l’arbre dans le fichier compressé, tel que si le bit courant est un ‘0’, nous poursuivons la construction de l’arbre à gauche, sinon c’est un ‘1’, ce qui signifie que nous sommes arrivés sur une feuille. À ce niveau, deux choix s’offrent à nous :
+Nous sommes encore du côté gauche de l’arbre, donc nous avons une feuille à gauche que nous remplissons à l’aide la table de Huffman, puis nous passons au côté droit ;
+Nous sommes déjà du côté droit de l’arbre, donc nous avons une feuille à droite et nous retournons à la branche supérieure pour poursuivre son côté droit.\
+
+\
+
+- Decompresser_Texte :
+Finalement, il ne nous reste plus qu’à décompresser le texte et d’écrire les caractères correspondants dans le fichier décompressé.
+Pour ce faire, nous allons lire bit par bit le reste des octets du fichier compressé pour nous permettre de parcourir l’arbre (‘0’ : on passe par la branche gauche, ‘1’ : on passe par la branche droite). Au préalable, on vérifie si le nœud où nous sommes arrivés est une feuille, auquel cas cela signifie que nous avons trouvé le caractère à écrire.
+Il ne manque plus qu’à récupérer ses informations, et de l’écrire dans le fichier décompressé. L’algorithme s’arrête lorsque le caractère de fin de fichier est trouvé.\
+
+\
 
 
 == Démarches de test
@@ -178,7 +196,7 @@ La répartition des tâches lors de la réalisation de ce projet s’est effectu
 \
 
 #align(center)[
-  #image("Tableau.jpg", width: 100%)
+  #image("Tableau.jpg", width: 75%)
 ]
 
 #pagebreak()
