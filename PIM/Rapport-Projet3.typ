@@ -57,6 +57,7 @@ Notre projet se regroupe en plusieurs fichiers qui seront explicités au fur et 
 - Le fichier test_decompresser.adb : fichier de réalisation de tests assurant le bon fonctionnement de décompression du texte.
 
 == Choix effectués
+\
 
 
 == Architecture de l'application mobile
