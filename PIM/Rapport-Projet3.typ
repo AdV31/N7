@@ -102,81 +102,63 @@ Nous utilisons au total cinq tableaux différents, qui ont assurément le même 
 
 Passons à présent aux différents sous-programmes principaux et essentiels au bon fonctionnement de la compression/décompression. Tout d’abord, retrouvons les algorithmes du fichier compresser.adb :\
 
-- Conversion :
-\
-
+- Conversion_Texte :
 
 La première étape avant de débuter une quelconque création d’un arbre ou d’une table de Huffman est de s’assurer que l’on récupère bien le texte à compresser, et que l’on puisse en lire son contenu. Nous avons donc mis en place ce sous-programme qui permet de récupérer, caractère par caractère, le texte initial et de l’insérer dans une variable en Unbounded_String. Ce dernier s’occupe assurément de la gestion des types ; la lecture s’effectuant sous forme d’octet, il est nécessaire de  le convertir en caractère à concaténer à la suite du texte, jusqu’à ce qu’il soit complètement lu.\
-Voici son code :\
-[SCREENSHOT CONVERSION]\
+
 \
 
 - Creer_Table_Frequence :
-\
 
 La compression par codage de Huffman nécessite la fréquence d’apparition des caractères en premier lieu, et pour les enregistrer nous allons créer un tableau de ces dernières. Pour ce faire, en sachant que les caractères usuels peuvent s’écrire en entier ne dépassant pas 256, nous avons utilisé les indices du tableau comme repère (afin d’enregistrer indirectement le caractère associé à la fréquence enregistrée).\
 En effet, prenons l’exemple du caractère ‘a’, valant 97, si il apparaît 13 fois dans le fichier que l’on souhaite compresser, alors la table de fréquence sera remplie tel que Table_freq[97] = 13.\
-Voici son code :\
-[SCREENSHOT CREER_TABLE_FREQUENCE]\
+
 \
 
 - Arbre_Huffman :
-\
 
 La compréssion du texte demande le parcours de l'arbre de compression de Huffman. Pour cela nous allons créer un tableau d'arbrisseaux que nous allons dans un premier temps remplir des feuilles seulement.\
 Puis nous recherchons les deux arbrisseaux différent de fréquences minimum, et nous créons un noeud qui prendra les deux arbrisseaux en fils droit et gauche.\
 Nous plaçons ce nouvel arbrisseau à la place du premier minimum dans le tableau d'arbrisseaux et nous mettons à Zero la cellule du deuxième pour qu'elle ne soit plus pris en compte dans la recherche suivante de minimum.\
 Nous répétons ces opérations jusqu'à n'avoir qu'un seul arbre dans notre tableau, qui est notre arbre d'Huffman.\
-Voici son code:\
-[SCREENSHOT Arbre_Huffman]\
+
 \
+
 - Creer_Codage_Huffman :
-\
 
 Maintenant que notre arbre est créé, nous allons enregistrer leur code issu de ce dernier dans un tableau similaire à la table de fréquence, cependant nous n’allons pas enregistrer d’entiers pour les fréquences mais des Unbounded_String pour le code binaire du caractère (exemple : “10010”).\
 Nous allons donc parcourir l’arbre jusqu’à tomber sur une feuille, puisque qui dit feuille dit code du caractère enregistré, ainsi que le caractère en question. C’est ainsi que notre tableau se remplit.\
-Voici son code :\
-[SCREENSHOT CREER_CODAGE_HUFFMAN]\
+
 \
 
 - Creer_Table_Huffman :
-\
 
 À présent, il nous faut enregistrer la signature de notre arbre pour que, lors de la décompression, nous puissions le reconstruire à l’aide de cette dernière.\
 Le fonctionnement est exactement le même que pour Creer_Codage_Huffman précédemment, cependant nous enregistrons cette fois-ci le caractère ainsi que sa position dans l’arbre pour que, lors de la reconstruction, nous n'ayons qu’à lire dans l’ordre les caractères de cette table.\
 Il est important de noter que le premier élément de ce tableau est la position du caractère de fin ; puisqu’il n’a pas de valeur représentative (on ne pourra pas écrire -1 dans le fichier), nous optons pour cette solution, étant celle mentionnée dans le sujet.\
-Voici son code :\
-[SCREENSHOT CREER_TABLE_HUFFMAN]\
+
 \
 
 - Compresser_Table_Huffman :
-\
 
 Maintenant, tous les éléments sont en place, nous en sommes rendus à la dernière étape et la plus concrète de toutes : la compression du fichier. Tout d’abord, il nous faut écrire dans le fichier compressé notre table de Huffman, qui sera la première à être décodée pour la décompression. Cela se contente simplement d’effectuer une boucle qui écrit chaque élément de la table un par un, sous forme d’octet bien sûr.\
 Notons deux points importants : d’abord, puisque la conversion d’un entier en octet se fait sans embûche pour la reconnaissance des caractères, nous n’avons aucun besoin d’écrire bit par bit ce dernier jusqu’à pouvoir écrire l’octet sur le fichier (rappelons que l’on ne peut qu’écrire octet par octet). De plus, pour savoir quand la lecture s’interrompt, c’est-à-dire quand est-ce que la table de Huffman est décodée, la solution proposée est d’écrire deux fois le dernier caractère ; cette double écriture est essentielle pour ne pas lire trop d’octets en pensant que c’est toujours la table de Huffman, alors que non.\
-Voici son code :\
-[SCREENSHOT COMPRESSER_TABLE_HUFFMAN]\
+
 \
 
 - Compresser_Huffman :
-\
-
 
 En second temps, nous devons écrire la signature de l’arbre de Huffman, afin que lors de la décompression, la reconstruction de l’arbre soit possible.\
 La méthode adoptée ici est d’écrire un ‘0’ lorsque l’on parcourt l’arbre vers la gauche, puis lorsqu’on atteint une feuille, on écrit un ‘1’. Le sous-programme s’occupe donc de cette mission, en sachant que cette fois-ci, nous devons écrire bit par bit puisqu’il est tout à fait plausible que la signature de l’arbre ne se termine pas par un octet plein (ce sera même peu commun).\
 La gestion de cette écriture ne sera pas explicitée ici puisque nous ne présentons que les principaux algorithmes du programme, en revanche nous avons déjà abordé le sujet lors du chapître “Choix effectués” précédemment.\
-Voici son code :\
-[SCREENSHOT COMPRESSER_HUFFMAN]\
+
 \
 
 - Compresser_Texte :
-\
-
 
 Finalement, le dernier sous-programme principal de cette partie de compression est celui de la compression du texte. À l’aide du texte récupéré au tout début du programme, nous allons le parcourir caractère par caractère, puis écrire le code correspondant à ce dernier, enregistré dans la table créée par l’algorithme Creer_Codage_Huffman (voir ci-dessus).\
 La seule subtilité ici, c’est le caractère de fin de fichier : lorsque tout le texte aura été parcouru, alors c’est à ce moment que ce caractère sera écrit, bien entendu avec son code issu de l’arbre de Huffman.\
-Voici son code :\
-[SCREENSHOT COMPRESSER_TEXTE]\
+
 \
 
 Passons maintenant aux sous-programmes du fichier decompresser.adb :\
@@ -214,14 +196,17 @@ Enfin, il nous a été primordial de bien gérer notre temps, afin de pouvoir av
 
 == Bilan technique
 
-== Bilan personnel et collectif
+== Bilan collectif\
 
-=== De Adrien VIGNAUX
+Nous avons passé environ 4 heures sur la conception des programmes pour chaque personne du binôme, de même pour la mise au point. Nous avons passé environ 9 heures chacun sur l’implémentation et 2 heures sur le rapport. Ce qui au final fait en combiné environ 38 heures.
+
+== Bilan personnel et individuel
 \
+
+=== De Adrien VIGNAUX\
 
 Ce projet est très enrichissant au niveau du travail en équipe car c'est le premier projet long que l'on fait à deux.
 
-=== De Enzo BLANCHARD
-\
+=== De Enzo BLANCHARD\
 
 Finalement, ce projet était notre première approche du monde de l’ingénierie : entre la gestion d’équipe et du travail, les deadlines à respecter ou encore le processus de création, d’innovation pour un rendu encore et toujours plus performant, efficace, ce projet était assez complet et nous a permis de pleinement manipuler tous les aspects de la programmation impérative.
