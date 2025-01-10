@@ -75,28 +75,51 @@ Enfin, nous avons aussi décidé de rendre le module arbre public pour deux rais
 
 - Module Arbre :\
 
-Qui dit arbre de Huffman dit qu’il nous faudra créer un nouveau type de données pour le représenter ; ce module est fait pour cela. En effet, l’arbre de Huffman est représenté par une LCA dans lequel on effectue un enregistrement de plusieurs éléments (que l’on appellera un nœud) :\
+  Qui dit arbre de Huffman dit qu’il nous faudra créer un nouveau type de données pour le représenter ; ce module est fait pour cela. En effet, l’arbre de Huffman est représenté par une LCA dans lequel on effectue un enregistrement de plusieurs éléments (que l’on appellera un nœud) :\
 
-un caractère ;
-un entier (qui sera la fréquence d’apparition du caractère) ;
-une branche gauche ;
-une branche droite.\
+  - un caractère ;
+  - un entier (qui sera la fréquence d’apparition du caractère) ;
+  - une branche gauche ;
+  - une branche droite.\
 
-Les branches gauche et droite représentent un autre enregistrement, et ce, jusqu’à ce que les deux branches d’un nœud soient nulles. Il faut noter que, dans notre situation, il n’existe que deux situations.\
+ Les branches gauche et droite représentent un autre enregistrement, et ce, jusqu’à ce que les deux branches d’un nœud soient nulles. Il faut noter que, dans notre situation, il n’existe que deux situations.\
 
-Nous pouvons soit être sur une branche de l’arbre, donc il n’y a pas de caractère ou sa fréquence d’enregistrée, mais les branches gauches et droites sont bien affectées à un autre enregistrement. Sinon nous sommes sur une feuille, il n’y a donc pas d’autre branche associée, cependant on y retrouve un caractère ainsi que sa fréquence d’apparition dans le texte.\
+ Nous pouvons soit être sur une branche de l’arbre, donc il n’y a pas de caractère ou sa fréquence d’enregistrée, mais les branches gauches et droites sont bien affectées à un autre enregistrement. Sinon nous sommes sur une feuille, il n’y a donc pas d’autre branche associée, cependant on y retrouve un caractère ainsi que sa fréquence d’apparition dans le texte.\
 
-Ce nouveau type de données implique la création de fonctions et procédures permettant de le manipuler efficacement et rigoureusement. Voici une liste des actions possibles :\
+ Ce nouveau type de données implique la création de fonctions et procédures permettant de le manipuler efficacement et rigoureusement. Voici une liste des actions possibles :\
 
-[ENUMERER LES SP DU .adb ET LES EXPLIQUER VITE FAIT]\
+    - Initialiser
+    - Detruire
+    - Enregistrer_Feuille
+    - Enregistrer_Branche
+    - Frequence_presente
+    - La_Frequence
+    - Taille
+    - Afficher_Feuille
+    - Afficher_Arbre
+\
 
 - Module Table :\
-Nous allons manipuler plusieurs tableaux de tailles différentes, et contenant des éléments différents également. Pour ce faire, nous avons besoin de créer ce module de façon générique, afin de récupérer tous nos tableaux nécessaires, tout en ne se souciant pas davantage de la manipulation de ces derniers, puisque tout sera effectué ici, dans ce module.\
-Nous utilisons au total cinq tableaux différents, qui ont assurément le même fonctionnement, mais absolument pas la même utilité ; d’où la nécessité de généricité ici. Afin de manipuler ces tableaux, voici les différentes actions possibles :\
+  Nous allons manipuler plusieurs tableaux de tailles différentes, et contenant des éléments différents également. Pour ce faire, nous avons besoin de créer ce module de façon générique, afin de récupérer tous nos tableaux nécessaires, tout en ne se souciant pas davantage de la manipulation de ces derniers, puisque tout sera effectué ici, dans ce module.\
+  Nous utilisons au total cinq tableaux différents, qui ont assurément le même fonctionnement, mais absolument pas la même utilité ; d’où la nécessité de généricité ici. Afin de manipuler ces tableaux, voici les différentes actions possibles :\
+    - Initialiser
+    - Taille
+    - Enregistrer
+    - Supprimer
+    - La_Valeur
+    - Afficher\
+\
 
-[ENUMERER LES SP DU .adb ET LES EXPLIQUER VITE FAIT]\
 
 
+- Module Conversion :\
+  Puisque nous avons fait le choix de traivaillé sur du texte plutôt que des octets, il est nécessaire de convertir les octets en entier ou en caractère et inversement dans plusieur programme différent. Ainsi nous avons fait le choix de créer un module non générique qui regroupe c'est fonctions, que voici :\
+  
+    - Boolean_To_Octet
+    - Integer_To_Octet
+    - Caractere_to_Integer : convertit les caractères $'1'$ et $'0'$ en 1 et 0
+    - Octet_To_Integer
+ 
 == Principaux algorithmes
 \
 
