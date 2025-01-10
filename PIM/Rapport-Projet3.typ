@@ -208,8 +208,6 @@ Il ne manque plus qu’à récupérer ses informations, et de l’écrire dans l
 \
 
 
-== Démarches de test
-
 = Gestion du travail
 
 == Organisation de l'équipe
@@ -219,7 +217,7 @@ La répartition des tâches lors de la réalisation de ce projet s’est effectu
 \
 
 #align(center)[
-  #image("Tableau.jpg", width: 75%)
+  #image("Tableau.jpg", width: 100%)
 ]
 
 #pagebreak()
