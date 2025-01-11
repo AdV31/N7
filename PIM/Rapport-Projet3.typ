@@ -51,8 +51,7 @@ Notre projet se regroupe en plusieurs fichiers qui seront explicités au fur et 
 - Les fichiers table.adb et table.ads : module “Table” permettant de manipuler diverses tableaux spécifiques tel que la Table de Fréquence et la Table de Huffman ;
 - Le fichier compresser.adb : premier fichier principal réalisant la compression d’un texte à partir du principe de codage de Huffman ;
 - Le fichier decompresser.adb : second fichier principal réalisant la décompression de notre texte préalablement compressé ;
-- Le fichier test_compresser.adb : fichier de réalisation de tests assurant le bon fonctionnement de compression du texte ;
-- Le fichier test_decompresser.adb : fichier de réalisation de tests assurant le bon fonctionnement de décompression du texte.
+
 
 == Choix effectués
 \
@@ -113,7 +112,7 @@ Enfin, nous avons aussi décidé de rendre le module arbre public pour deux rais
 
 
 - Module Conversion :\
-  Puisque nous avons fait le choix de traivaillé sur du texte plutôt que des octets, il est nécessaire de convertir les octets en entier ou en caractère et inversement dans plusieur programme différent. Ainsi nous avons fait le choix de créer un module non générique qui regroupe c'est fonctions, que voici :\
+  Puisque nous avons fait le choix de travailler sur du texte plutôt que des octets, il est nécessaire de convertir les octets en entier ou en caractère et inversement dans plusieur programmes différents. Ainsi nous avons fait le choix de créer un module non générique qui regroupe ces fonctions, que voici :\
   
     - Boolean_To_Octet
     - Integer_To_Octet
@@ -140,9 +139,9 @@ En effet, prenons l’exemple du caractère ‘a’, valant 97, si il apparaît 
 
 - Arbre_Huffman :
 
-La compréssion du texte demande le parcours de l'arbre de compression de Huffman. Pour cela nous allons créer un tableau d'arbrisseaux que nous allons dans un premier temps remplir des feuilles seulement.\
+La compression du texte demande le parcours de l'arbre de compression de Huffman. Pour cela nous allons créer un tableau d'arbrisseaux que nous allons dans un premier temps remplir de feuilles seulement.\
 Puis nous recherchons les deux arbrisseaux différent de fréquences minimum, et nous créons un noeud qui prendra les deux arbrisseaux en fils droit et gauche.\
-Nous plaçons ce nouvel arbrisseau à la place du premier minimum dans le tableau d'arbrisseaux et nous mettons à Zero la cellule du deuxième pour qu'elle ne soit plus pris en compte dans la recherche suivante de minimum.\
+Nous plaçons ce nouvel arbrisseau à la place du premier minimum dans le tableau d'arbrisseaux et nous mettons à Zero la cellule du deuxième pour qu'elle ne soit plus prise en compte dans la recherche suivante de minimum.\
 Nous répétons ces opérations jusqu'à n'avoir qu'un seul arbre dans notre tableau, qui est notre arbre d'Huffman.\
 
 \
@@ -183,6 +182,9 @@ Finalement, le dernier sous-programme principal de cette partie de compression e
 La seule subtilité ici, c’est le caractère de fin de fichier : lorsque tout le texte aura été parcouru, alors c’est à ce moment que ce caractère sera écrit, bien entendu avec son code issu de l’arbre de Huffman.\
 
 \
+\
+\
+\
 
 Passons maintenant aux sous-programmes du fichier decompresser.adb :\
 \
@@ -193,10 +195,10 @@ Rappelons que, pour indiquer la fin de lecture des octets de la table de Huffman
 \
 
 
-- Reconstruire_Arbre_Huffman :
-À présent, nous allons pouvoir recréer l’arbre de Huffman puisque nous avons toutes les informations permettant de le remplir. Pour ce faire, nous utilisons les bits représentant la signature de l’arbre dans le fichier compressé, tel que si le bit courant est un ‘0’, nous poursuivons la construction de l’arbre à gauche, sinon c’est un ‘1’, ce qui signifie que nous sommes arrivés sur une feuille. À ce niveau, deux choix s’offrent à nous :
-Nous sommes encore du côté gauche de l’arbre, donc nous avons une feuille à gauche que nous remplissons à l’aide la table de Huffman, puis nous passons au côté droit ;
-Nous sommes déjà du côté droit de l’arbre, donc nous avons une feuille à droite et nous retournons à la branche supérieure pour poursuivre son côté droit.\
+- Reconstruire_Arbre_Huffman :\
+ À présent, nous allons pouvoir recréer l’arbre de Huffman puisque nous avons toutes les informations permettant de le remplir. Pour ce faire, nous utilisons les bits représentant la signature de l’arbre dans le fichier compressé, tel que si le bit courant est un ‘0’, nous poursuivons la construction de l’arbre à gauche, sinon c’est un ‘1’, ce qui signifie que nous sommes arrivés sur une feuille. À ce niveau, deux choix s’offrent à nous :\
+ - Nous sommes encore du côté gauche de l’arbre, donc nous avons une feuille à gauche que nous remplissons à l’aide la table de Huffman, puis nous passons au côté droit ;\
+ - Nous sommes déjà du côté droit de l’arbre, donc nous avons une feuille à droite et nous retournons à la branche supérieure pour poursuivre son côté droit.\
 
 \
 
@@ -234,6 +236,7 @@ Enfin, il nous a été primordial de bien gérer notre temps, afin de pouvoir av
 = Conclusion
 
 == Bilan technique
+\
 
 Ce projet nous a permis de produire pour la première fois un résultat concret à l’aide de la programmation : dans notre situation, nous avons réussi à faire fonctionner les deux programmes, que ce soit pour compresser ou décompresser un fichier texte. Nous avons aussi pu réfléchir par nous-même afin de proposer une solution qui nous soit propre.\
 
@@ -242,17 +245,20 @@ Cependant, il est important de noter que nous avons plusieurs idées pour améli
 De plus, il aurait été intéressant d’automatiser davantage les démarches de tests pour une justification plus claire et concise du bon fonctionnement de nos programmes. Deux fichiers de programme de tests (pour compresser et décompresser) auraient été une bonne solution.\
 
 
-== Bilan collectif\
+== Bilan collectif
+\
 
-Nous avons passé environ 4 heures sur la conception des programmes pour chaque personne du binôme, de même pour la mise au point. Nous avons passé environ 9 heures chacun sur l’implémentation et 2 heures sur le rapport. Ce qui au final fait en combiné environ 38 heures.
+Nous avons passé environ 6 heures sur la conception des programmes pour chaque personne du binôme, de même pour la mise au point. Nous avons passé environ 14 heures chacun sur l’implémentation et 5 heures sur le rapport. Ce qui au final fait en combiné environ 50 heures.
 
 == Bilan personnel et individuel
 
 
-=== De Adrien VIGNAUX\
+=== De Adrien VIGNAUX
+\
 
 Ce projet est très enrichissant au niveau du travail en équipe car c'est le premier projet long que l'on fait à deux.
 
-=== De Enzo BLANCHARD\
+=== De Enzo BLANCHARD
+\
 
 Finalement, ce projet était notre première approche du monde de l’ingénierie : entre la gestion d’équipe et du travail, les deadlines à respecter ou encore le processus de création, d’innovation pour un rendu encore et toujours plus performant, efficace, ce projet était assez complet et nous a permis de pleinement manipuler tous les aspects de la programmation impérative.
