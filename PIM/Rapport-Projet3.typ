@@ -235,12 +235,19 @@ Enfin, il nous a été primordial de bien gérer notre temps, afin de pouvoir av
 
 == Bilan technique
 
+Ce projet nous a permis de produire pour la première fois un résultat concret à l’aide de la programmation : dans notre situation, nous avons réussi à faire fonctionner les deux programmes, que ce soit pour compresser ou décompresser un fichier texte. Nous avons aussi pu réfléchir par nous-même afin de proposer une solution qui nous soit propre.\
+
+Cependant, il est important de noter que nous avons plusieurs idées pour améliorer davantage notre projet. D’abord, nous aurions aimé pouvoir gérer une plus grande quantité de fichiers différents, sans que cela ne vienne poser souci, ou encore pouvoir compresser / décompresser plusieurs fichiers simultanément ; c’est-à-dire nous aurions aimé traiter davantage les cas limites de notre projet. Nous avons préféré privilégier un fonctionnement basique mais tout à fait conforme plutôt que plusieurs fragments de projets à peu près fonctionnels.\
+
+De plus, il aurait été intéressant d’automatiser davantage les démarches de tests pour une justification plus claire et concise du bon fonctionnement de nos programmes. Deux fichiers de programme de tests (pour compresser et décompresser) auraient été une bonne solution.\
+
+
 == Bilan collectif\
 
 Nous avons passé environ 4 heures sur la conception des programmes pour chaque personne du binôme, de même pour la mise au point. Nous avons passé environ 9 heures chacun sur l’implémentation et 2 heures sur le rapport. Ce qui au final fait en combiné environ 38 heures.
 
 == Bilan personnel et individuel
-\
+
 
 === De Adrien VIGNAUX\
 
