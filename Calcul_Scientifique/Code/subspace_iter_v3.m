@@ -21,7 +21,7 @@
     %  flag = 1  : on converge en ayant atteint la taille maximale de l'espace
     %  flag = -3 : on n'a pas convergé en maxit itérations
 
-function [ V, D, n_ev, it, itv, flag ] = subspace_iter_v2( A, m, percentage, p, eps, maxit )
+function [ V, D, n_ev, it, itv, flag ] = subspace_iter_v3( A, m, percentage, p, eps, maxit )
 
     % calcul de la norme de A (pour le critère de convergence d'un vecteur (gamma))
     normA = norm(A, 'fro');
