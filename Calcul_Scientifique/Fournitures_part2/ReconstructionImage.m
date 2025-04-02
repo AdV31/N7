@@ -80,7 +80,6 @@ percentage = 0.99;
 
 % p pour les versions 2 et 3 (attention p déjà utilisé comme taille)
 puiss = 1;
-
 %%%%%%%%%%%%%
 % À COMPLÉTER
 %%%%%%%%%%%%%
@@ -88,18 +87,46 @@ puiss = 1;
 %%
 % calcul des couples propres
 %%
-% TODO
+[V,S] = eig(I'*I);
+[S,ind] = sort(diag(S),'descend');
+S = diag(S);
+V = V(:,ind);
+V = V(:,1:200);
+S = S(1:200,1:200);
 %%
 % calcul des valeurs singulières
 %%
-% TODO
+sigma = sqrt(S);
 %%
 % calcul de l'autre ensemble de vecteurs
 %%
-% TODO
-%%
+U = zeros(size(I,1),size(V,2));
+U = (I*V)*inv(sigma);
 % calcul des meilleures approximations de rang faible
 %%
-for k = 1 %...
-% TODO
+td = 0;
+for k = inter
+
+    % Calcul de l'image de rang k
+    Im_k = U(:, 1:k)*sigma(1:k, 1:k)*V(:, 1:k)';
+
+    % Affichage de l'image reconstruite
+    ti = ti+1;
+    figure(ti)
+    colormap('gray')
+    imagesc(Im_k), axis equal
+    
+    % Calcul de la différence entre les 2 images (RMSE : Root Mean Square Error)
+    td = td + 1;
+    differencevp(td) = sqrt(sum(sum((I-Im_k).^2)));
+    pause
+
 end
+% Figure des différences entre l'image réelle et les images reconstruites
+ti = ti+1;
+figure(ti)
+hold on 
+plot(inter, differenceSVD, 'rx')
+ylabel('RMSE')
+xlabel('rank k')
+pause
