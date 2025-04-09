@@ -18,14 +18,77 @@
  * @param visites [in] liste des noeuds visités créée par l'algorithme de Dijkstra
  * @param noeud noeud vers lequel on veut construire le chemin depuis le départ
  */
-// TODO: construire_chemin_vers
+void construire_chemin_vers(
+    liste_noeud_t** chemin, 
+    const liste_noeud_t* visites, 
+    noeud_id_t noeud) {
+    
+    //C1
+    if (precedent_noeud_liste(visites, noeud) == NO_ID) {
+        inserer_noeud_liste(*chemin, noeud, NO_ID, 0.0);
+    } else {
+        //C1.2
+        construire_chemin_vers(chemin, visites, precedent_noeud_liste(visites, noeud));
+        inserer_noeud_liste(*chemin, noeud, precedent_noeud_liste(visites, noeud), distance_noeud_liste(visites, noeud));
+    }
+}
 
 
 float dijkstra(
     const struct graphe_t* graphe, 
     noeud_id_t source, noeud_id_t destination, 
     liste_noeud_t** chemin) {
-    // TODO
+    
+    //D
+    liste_noeud_t* visites = NULL;
+    liste_noeud_t* aVisiter = NULL;
+    noeud_id_t noeud_courant = NO_ID;
+        
+        //D1
+        inserer_noeud_liste(aVisiter, source, NO_ID, 0.0);
+        
+        //D2
+        while (!est_vide_liste(aVisiter)) {
+            //D2.1
+            noeud_courant = min_noeud_liste(aVisiter);
+            
+            //D2.2
+            inserer_noeud_liste(visites, noeud_courant, precedent_noeud_liste(aVisiter,noeud_courant), distance_noeud_liste(aVisiter,noeud_courant));
+
+            //D2.3
+            supprimer_noeud_liste(aVisiter,noeud_courant);
+
+            //D2.4
+            int nb_voisins = nombre_voisins(graphe, noeud_courant);
+            noeud_id_t voisin[nb_voisins];
+            noeuds_voisins(graphe, noeud_courant, voisin);
+            float distance = distance_noeud_liste(visites,noeud_courant);
+            
+            for (int i = 0; i < nb_voisins; i++) {
+                noeud_id_t voisin_courant = voisin[i];
+                if (!contient_noeud_liste(visites, voisin_courant)) {
+                    
+                    //D2.4.1
+                    float distance_voisin = noeud_distance(graphe, noeud_courant, voisin_courant);
+                    float distance_voisin_courant = distance + distance_voisin;
+                    float distance_aVisiter = distance_noeud_liste(aVisiter,voisin_courant);
+
+                    //D2.4.3
+                    if (distance_voisin_courant < distance_aVisiter) {
+                        changer_noeud_liste(aVisiter, voisin_courant, noeud_courant, distance_voisin_courant);
+                    }
+            }
+        }
+
+    }
+
+    //C
+    if (contient_noeud_liste(visites, destination)) {
+        construire_chemin_vers(chemin, visites, destination);
+    } else {
+        *chemin = NULL;
+    }
+    return distance_noeud_liste(visites, destination);
 }
 
 

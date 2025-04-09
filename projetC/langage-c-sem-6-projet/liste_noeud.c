@@ -6,7 +6,7 @@
 struct cellule_t {
     noeud_id_t noeud, precedent;
     float distance;
-    cellule_t* suivante;
+    struct cellule_t* suivante;
 };
 
 typedef struct cellule_t cellule_t;
@@ -130,7 +130,7 @@ void supprimer_noeud_liste(liste_noeud_t* liste, noeud_id_t noeud) {
         precedent = courant;
         courant = courant->suivante;
     }
-    if(!estSupprime && courant == noeud) {
+    if(!estSupprime && courant->noeud == noeud) {
         precedent->suivante = courant->suivante;
         free(courant);
         liste->fin = precedent;
