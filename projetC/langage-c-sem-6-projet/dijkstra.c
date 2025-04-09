@@ -83,12 +83,20 @@ float dijkstra(
     }
 
     //C
-    if (contient_noeud_liste(visites, destination)) {
+    if(chemin != NULL) {
+        *chemin = creer_liste();
         construire_chemin_vers(chemin, visites, destination);
-    } else {
-        *chemin = NULL;
     }
-    return distance_noeud_liste(visites, destination);
+
+    float distance = distance_noeud_liste(visites, destination);
+
+    // Libération de la mémoire
+    detruire_liste(&aVisiter);
+    detruire_liste(&visites);
+    aVisiter = NULL;
+    visites = NULL;
+
+    return distance;
 }
 
 
