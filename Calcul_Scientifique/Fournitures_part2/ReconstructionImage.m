@@ -4,7 +4,7 @@ clear all
 close all
 
 % Lecture de l'image
-I = imread('BD_Spirou_2.jpg');
+I = imread('BD_Spirou_1.jpg');
 I = rgb2gray(I);
 I = double(I);
 
