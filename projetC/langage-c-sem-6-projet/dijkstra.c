@@ -40,8 +40,8 @@ float dijkstra(
     liste_noeud_t** chemin) {
     
     //D
-    liste_noeud_t* visites = NULL;
-    liste_noeud_t* aVisiter = NULL;
+    liste_noeud_t* visites = creer_liste();
+    liste_noeud_t* aVisiter = creer_liste();
     noeud_id_t noeud_courant = NO_ID;
         
         //D1
