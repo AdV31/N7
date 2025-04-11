@@ -52,53 +52,69 @@ bool est_vide_liste(const liste_noeud_t* liste) {
 }
 
 bool contient_noeud_liste(const liste_noeud_t* liste, noeud_id_t noeud) {
-    cellule_t* courant = liste->debut;
-    while(courant != liste->fin) {
-        if(courant->noeud == noeud) {
-            return true;
+    if (est_vide_liste(liste)) {
+        return false;
+    } else {
+        cellule_t* courant = liste->debut;
+        while(courant != liste->fin) {
+            if(courant->noeud == noeud) {
+                return true;
+            }
+            courant = courant->suivante;
         }
-        courant = courant->suivante;
+        return courant->noeud == noeud;
     }
-    return courant->noeud == noeud;
+
+    
 }
 
 bool contient_arrete_liste(const liste_noeud_t* liste, noeud_id_t source, noeud_id_t destination) {
-    if(liste == NULL) {
+    if(est_vide_liste(liste)) {
         return false;
+    } else {
+        return contient_noeud_liste(liste, source) && contient_noeud_liste(liste, destination);
     }
-    return contient_noeud_liste(liste, source) && contient_noeud_liste(liste, destination);
 }
 
 float distance_noeud_liste(const liste_noeud_t* liste, noeud_id_t noeud) {
-    cellule_t* courant = liste->debut;
-    while(courant != liste->fin) {
+    if (est_vide_liste(liste)) {
+        return INFINITY;
+    } else {
+        cellule_t* courant = liste->debut;
+        while(courant != liste->fin) {
+            if(courant->noeud == noeud) {
+                return courant->distance;
+            }
+            courant = courant->suivante;
+        }
         if(courant->noeud == noeud) {
             return courant->distance;
         }
-        courant = courant->suivante;
+        return INFINITY;
     }
-    if(courant->noeud == noeud) {
-        return courant->distance;
-    }
-    return INFINITY;
+    
 }
 
 noeud_id_t precedent_noeud_liste(const liste_noeud_t* liste, noeud_id_t noeud) {
-    cellule_t* courant = liste->debut;
-    while(courant != liste->fin) {
+    if (est_vide_liste(liste)) {
+        return NO_ID;
+    } else {
+        cellule_t* courant = liste->debut;
+        while(courant != liste->fin) {
+            if(courant->noeud == noeud) {
+                return courant->precedent;
+            }
+            courant = courant->suivante;
+        }
         if(courant->noeud == noeud) {
-            return courant->precedent;
-        }
-        courant = courant->suivante;
+                return courant->precedent;
+            }
+        return NO_ID;
     }
-    if(courant->noeud == noeud) {
-            return courant->precedent;
-        }
-    return NO_ID;
 }
 
 noeud_id_t min_noeud_liste(const liste_noeud_t* liste) {
-    if(liste == NULL || liste->debut == NULL) {
+    if(est_vide_liste(liste)) {
         return NO_ID;
     } else {
         cellule_t* courant = liste->debut;
@@ -141,20 +157,25 @@ void inserer_noeud_liste(liste_noeud_t* liste, noeud_id_t noeud, noeud_id_t prec
 }
 
 void changer_noeud_liste(liste_noeud_t* liste, noeud_id_t noeud, noeud_id_t precedent, float distance) {
-    cellule_t* courant = liste->debut;
-    while(courant != liste->fin) {
-        if(courant->noeud == noeud) {
-            courant->precedent = precedent;
-            courant->distance = distance;
-            break;
-        }
-        courant = courant->suivante;
-    }
-    if(courant->noeud == noeud) {
-            courant->precedent = precedent;
-            courant->distance = distance;
-    } else {
+    if (est_vide_liste(liste)) {
         inserer_noeud_liste(liste, noeud, precedent, distance);
+        return;
+    } else {
+        cellule_t* courant = liste->debut;
+        while(courant != liste->fin) {
+            if(courant->noeud == noeud) {
+                courant->precedent = precedent;
+                courant->distance = distance;
+                break;
+            }
+            courant = courant->suivante;
+        }
+        if(courant->noeud == noeud) {
+                courant->precedent = precedent;
+                courant->distance = distance;
+        } else {
+            inserer_noeud_liste(liste, noeud, precedent, distance);
+        }
     }
 }
 
