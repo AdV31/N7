@@ -4,7 +4,7 @@ clear all
 close all
 
 % Lecture de l'image
-I = imread('BD_Spirou_1.jpg');
+I = imread('BD_Asterix_Colored.jpg');
 I = rgb2gray(I);
 I = double(I);
 
@@ -47,23 +47,21 @@ for k = inter
     % Calcul de la différence entre les 2 images (RMSE : Root Mean Square Error)
     td = td + 1;
     differenceSVD(td) = sqrt(sum(sum((I-Im_k).^2)));
-    pause
 end
 
 % Figure des différences entre l'image réelle et les images reconstruites
 ti = ti+1;
 figure(ti)
-hold on 
+hold on
 plot(inter, differenceSVD, 'rx')
 ylabel('RMSE')
 xlabel('rank k')
-pause
 
 
 % Plugger les différentes méthodes : eig, puissance itérée et les 4 versions de la "subspace iteration method" 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% QUELQUES VALEURS PAR DÉFAUT DE PARAMÈTRES, 
+% QUELQUES VALEURS PAR DÉFAUT DE PARAMÈTRES,
 % VALEURS QUE VOUS DEVEZ FAIRE ÉVOLUER
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -119,7 +117,6 @@ for k = inter
     % Calcul de la différence entre les 2 images (RMSE : Root Mean Square Error)
     td = td + 1;
     differencevp(td) = sqrt(sum(sum((I-Im_k).^2)));
-    pause
 
 end
 % Figure des différences entre l'image réelle et les images reconstruites
@@ -129,4 +126,3 @@ hold on
 plot(inter, differenceSVD, 'rx')
 ylabel('RMSE')
 xlabel('rank k')
-pause

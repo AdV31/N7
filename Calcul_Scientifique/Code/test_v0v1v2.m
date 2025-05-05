@@ -6,7 +6,7 @@ format long;
 %%%%%%%%%%%%
 
 % taille de la matrice symétrique
-n = 100;
+n = 200;
 
 % type de la matrice (voir matgen_csad)
 % imat == 1 valeurs propres D(i) = i
