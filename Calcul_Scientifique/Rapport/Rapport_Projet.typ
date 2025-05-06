@@ -2,7 +2,7 @@
 #import"template_Rapport.typ":*
 
 #show: project.with(
-  title: "Rapport Bureau Etude --- Automatique",
+  title: "Rapport Projet Calcul Scientifique",
   authors: (
     "VIGNAUX Adrien",
     "BLANCHARD Enzo",
