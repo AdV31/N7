@@ -74,7 +74,7 @@ maxit = 10000;
 search_space = 400;
 
 % pourcentage que l'on se fixe
-percentage = 0.99;
+percentage = 0.999;
 
 % p pour les versions 2 et 3 (attention p déjà utilisé comme taille)
 puiss = 1;
@@ -83,9 +83,15 @@ puiss = 1;
 %%%%%%%%%%%%%
 
 %%
-% calcul des couples propres
+% calcul des couples propres : décommenter la fonction désirée
 %%
-[V,S] = eig(I'*I);
+A = I'*I;
+%[V,S] = power_v12(A,search_space,eps,maxit,percentage);
+%[V,S] = subspace_iter_v0(A,search_space,eps,maxit,percentage);
+%[V,S] = subspace_iter_v1(A,search_space,eps,maxit,percentage,puiss);
+%[V,S] = subspace_iter_v2(A,search_space,eps,maxit,percentage,puiss);
+%[V,S] = subspace_iter_v3(A,search_space,eps,maxit,percentage,puiss);
+[V,S] = eig(A);
 [S,ind] = sort(diag(S),'descend');
 S = diag(S);
 V = V(:,ind);

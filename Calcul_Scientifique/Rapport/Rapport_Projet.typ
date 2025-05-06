@@ -333,7 +333,71 @@ En premier temps, il est important de noter que :\
 De plus, lorsque q < p, l’image passe en format paysage.
 À présent, voici l’algorithme en question:\
 
-[ALGO ReconstructionImage.m]\
+#figure(
+  algo(
+  title: [                    // note that title and parameters
+    #set text(size: 15pt)     // can be content
+    #emph(smallcaps("ReconstructionImage.m"))
+  ],
+  comment-prefix: [%],
+  comment-styles: (fill: rgb("#000000")),
+  indent-size: 15pt,
+  indent-guides: 1pt + gray,
+  row-gutter: 5pt,
+  column-gutter: 5pt,
+  inset: 5pt,
+  stroke: 2pt + black,
+  fill: none,
+)[
+  Input: Image to reconstruct\
+  \
+
+  *Read and Preprocess the Image*\
+  I = imread('BD_Asterix_Colored.jpg')\
+  I = rgb2gray(I)\
+  I = double(I)\
+  [q, p] = size(I)\
+  \
+
+  *Perform SVD*\
+  [U, S, V] = svd(I)\
+  \
+
+  *Image Reconstruction Using Rank-k Approximations*\
+  inter = 1:40:200\
+  inter(end) = 200\
+  differenceSVD = zeros(size(inter,2), 1)\
+
+  for k = inter#i\
+    $Im_k = U(:,1:k) * S(1:k,1:k) * V(:,1:k)$'\
+    differenceSVD(k) = $sqrt(sum(sum((I - Im_k).^2)))$#d\
+  end\
+  \
+
+  *Eigenvalue Decomposition Approach*\
+  $A = I' * I$\
+  [V, S] = eig(A)\
+  [S,ind] = sort(diag(S),'descend')\ 
+  S = diag(S)\
+  V = V(:,ind)\
+
+  sigma = sqrt(S)\
+  $U = (I * V) *$ inv(sigma)\
+\
+
+  *RMSE Comparison*\
+  for k = inter#i\
+    $Im_k = U(:,1:k) * S(1:k,1:k) * V(:,1:k)$'\
+    differencePower(k) = $sqrt(sum(sum((I - Im_k).^2)))$#d\
+  end\
+  plot(inter, differenceSVD, 'rx')\
+  xlabel('rank k')\
+  ylabel('RMSE')\
+],
+
+  caption: [Algorythme de la puissance itérée avec deflation]
+)
+\
 
 == Résultats obtenus
 \
