@@ -190,7 +190,7 @@ Notre programme va naturellement être modifié pour prendre en compte ce change
 Les différentes étapes de cet algorithme peuvent être identifiées comme telles :\
 
 #figure(
-  image("subspace_iter_v1.png", width: 80%),
+  image("subspace_iter_v1.png", width: 65%),
   caption : [Algorithme subspace_iter_v1]
 )
 \
@@ -299,7 +299,7 @@ Ainsi, voici le programme “subspace_iter_v3.m” :\
 Voici les différentes distributions des valeurs propres en fonction de imat :\
 
 #figure(
-  image("Courbe_vpropre.png", width: 80%),
+  image("Courbe_vpropre.png", width: 70%),
   caption : [Tableau de données TP02]
 )
 \
@@ -310,6 +310,8 @@ Voici le bilan des tests des différentes versions en fonction du type et de la 
   image("tableau_v0_v1_v2_v3.png", width: 80%),
   caption : [Tableau de données TP02]
 )
+\
+
 \
 
 = Seconde Partie : Subspace Iteration Method
