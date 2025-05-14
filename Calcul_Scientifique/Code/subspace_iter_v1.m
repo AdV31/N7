@@ -35,33 +35,39 @@ function [ V, D, n_ev, it, itv, flag ] = subspace_iter_v1( A, m, percentage, eps
     itv = zeros(m,1);
 
     % numéro de l'itération courante
-    k = 0;
+
+    k = 0; % ligne 6 de la figure 5
+
     % somme courante des valeurs propres
     eigsum = 0.0;
     % nombre de vecteurs ayant convergés
     nb_c = 0;
 
     % indicateur de la convergence
-    conv = 0;
+
+    conv = 0; % ligne 7 de la figure 5
 
     % on génère un ensemble initial de m vecteurs orthogonaux
     Vr = randn(n, m);
     Vr = mgs(Vr);
 
     % rappel : conv = (eigsum >= trace) | (nb_c == m)
-    while (~conv && k < maxit)
+    while (~conv && k < maxit) %boucle repeat de la figure 5
         
-        k = k+1;
+        k = k+1; % ligne 9 de la figure 5
+
         %% Y <- A*V
-        Y = A*Vr;
+        Y = A*Vr; % ligne 10 de la figure 5
+
         %% orthogonalisation
-        Vr = mgs(Y);
+        Vr = mgs(Y); % ligne 11,12,13 de la figure 5
         
         %% Projection de Rayleigh-Ritz
-        [Wr, Vr] = rayleigh_ritz_projection(A, Vr);
+        [Wr, Vr] = rayleigh_ritz_projection(A, Vr); % ligne 14 de la figure 5
         
-        %% Quels vecteurs ont convergé à cette itération
+        %% Quels vecteurs ont convergé à cette itération % ligne 15 de la figure 5
         analyse_cvg_finie = 0;
+
         % nombre de vecteurs ayant convergé à cette itération
         nbc_k = 0;
         % nb_c est le dernier vecteur à avoir convergé à l'itération précédente
