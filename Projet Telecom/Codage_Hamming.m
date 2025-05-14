@@ -7,7 +7,7 @@ close all
 Fe=12000;       %Fréquence d'échantillonnage
 Te=1/Fe;        %Période d'échantillonnage
 Rb=3000;        %Débit binaire souhaité
-N=12;         %Nombre de bits générés
+N=1000;         %Nombre de bits générés
 
 M= 2;         %Ordre de la modulation(BPSK est binaire donc M=2)
 Rs= Rb;         %Débit symbole
@@ -50,6 +50,7 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
     nb_cumul=0;     %Variables permettant de compter le nombre de cumuls réalisés
     TES_BPSK=0;          %Initialisation du TES pour le cumul
     TEB_BPSK=0;          %Initialisation du TEB pour le cumul
+    TEB_BPSK_Souple=0;   %Initialisation du TEB souple pour le cumul
     
     %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % BOUCLE POUR PRECISION TES ET TEBS MESURES :COMPTAGE NOMBRE ERREURS
@@ -68,17 +69,20 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         Codes = mod(bits*G,2); %Codage de la séquence d'information
         Codes= Codes(:)';
+        B_vect = B(:)';
         
         %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %MAPPING
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
         symboles_BPSK= 2*Codes-1; %Mapping BPSK
+        symboles_dico = 2.*B-1;
         
         %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %SURECHANTILLONNAGE
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         somme_Diracs_ponderes_BPSK=kron(symboles_BPSK,[1 zeros(1,Ns-1)]);
+        somme_Diracs_ponderes_dico=kron(symboles_dico,[1 zeros(1,Ns-1)]);
         
         %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %FILTRAGE DE MISE EN FORME
@@ -87,6 +91,7 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
         h=  ones(1,Ns);
         %Filtrage de mise en forme
         Signal_emis_BPSK=filter(h,1,somme_Diracs_ponderes_BPSK);
+        Signal_emis_dico=filter(h,1,somme_Diracs_ponderes_dico);
         
         %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %CANAL DE PROPAGATION AWGN
@@ -112,6 +117,7 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
         hr= ones(1,Ns);
         %Filtrage de réception
         Signal_recu_filtre_BPSK=filter(hr,1,Signal_recu_BPSK);
+        Signal_recu_filtre_dico=filter(hr,1,Signal_emis_dico);
         
         %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %ECHANTILLONNAGE
@@ -120,7 +126,23 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
         n0=Ns;
         %Echantillonnage à n0+mNs
         Signal_echantillonne_BPSK=Signal_recu_filtre_BPSK(n0:Ns:end);
+        Signal_echantillonne_dico=Signal_recu_filtre_dico(n0:Ns:end);
+
+        %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %Decodage Souple
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
+        bits_recus_BPSK_souple=zeros(N/k,k);
+        for i=1:N/k
+            %Calcul de la distance de Hamming entre le mot reçu et tous les mots codés possibles
+            distances= zeros(1,2^k);
+            for j=1:2^k
+                distances(j)=norm(Signal_echantillonne_BPSK(i) - Signal_echantillonne_dico(j));
+            end
+            [mini,indmin] = min(distances);
+            bits_recus_BPSK_souple(i,:)=B(indmin,:);
+        end
+
         %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %DECISIONS SUR LES SYMBOLES
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -157,6 +179,7 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
         %CALCUL DU TAUX D'ERREUR BINAIRE CUMULE
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         TEB_BPSK=TEB_BPSK+numel(find(bits ~= bits_recus_BPSK))/numel(bits);
+        TEB_BPSK_Souple =TEB_BPSK_Souple+numel(find(bits ~= bits_recus_BPSK_souple))/numel(bits);
 
         %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %CUMUL DU NOMBRE D'ERREURS ET NOMBRE DE CUMUL REALISES
@@ -172,6 +195,7 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     TES_simule_BPSK(indice_bruit)=TES_BPSK/nb_cumul;
     TEB_simule_BPSK(indice_bruit)=TEB_BPSK/nb_cumul;
+    TEB_simule_BPSK_Souple(indice_bruit)=TEB_BPSK_Souple/nb_cumul;
 
 
 end  %fin boucle sur les valeurs testées de Eb/N0
@@ -201,6 +225,8 @@ figure
 semilogy(tab_Eb_N0_dB, TEB_THEO_BPSK,'r-x')
 hold on
 semilogy(tab_Eb_N0_dB, TEB_simule_BPSK,'b-o')
-legend('TEB théorique BPSK','TEB simulé BPSK')
+hold on
+semilogy(tab_Eb_N0_dB, TEB_simule_BPSK_Souple,'g-o')
+legend('TEB théorique BPSK','TEB simulé dur BPSK', 'TEB simulé souple BPSK')
 xlabel('E_b/N_0 (dB)')
 ylabel('TEB')
