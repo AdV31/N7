@@ -114,81 +114,66 @@ int main(void) {
                 */
                 int indexseq= 0;
                 char **cmd;
-                int tube1[2];
-                int tube2[2];
-                pipe(tube1);
+                int tube[2];
+                int tube_precedent = -1;
                 while ((cmd= commande->seq[indexseq])) {
-                    
-                    if (indexseq != 0) {
-                        tube2[0] = tube1[0];
-                        tube2[1] = tube1[1];
-                    }
-
-                    if (commande->seq[indexseq + 1] != NULL) {
-                        pipe(tube2);
-                    }
 
                     if (cmd[0]) {
                         if (strcmp(cmd[0], "exit") == 0) {
                             fini= true;
                             printf("Au revoir ...\n");
+                            indexseq++;
                         }
-                        
-                        if (strcmp(cmd[0], "cd") == 0 || strcmp(cmd[0], "dir") == 0) {
-                            char *chemin_dir;
-                            char *rep = cmd[1];
-                            if (rep != NULL) {
-                                chemin_dir = rep;
-                            } else {
-                                rep = getenv("HOME");
-                                chemin_dir = getcwd(NULL, 0);
+                        else {
+                            if (strcmp(cmd[0], "cd") == 0 || strcmp(cmd[0], "dir") == 0) {
+                                char *chemin_dir;
+                                char *rep = cmd[1];
+                                if (rep != NULL) {
+                                    chemin_dir = rep;
+                                } else {
+                                    rep = getenv("HOME");
+                                    chemin_dir = getcwd(NULL, 0);
+                                }
+                                
+                                if (strcmp(cmd[0], "cd") == 0) {
+                                    if (chdir(rep) == -1) {
+                                        perror("cd");
+                                    }
+                                } else if (strcmp(cmd[0], "dir") == 0) {
+                                    DIR *rep = opendir(chemin_dir);
+                                    if (rep == NULL) {
+                                        perror("dir");
+                                    } else {
+                                        struct dirent *ent;
+                                        while ((ent = readdir(rep)) != NULL) {
+                                            printf("%s\n", ent->d_name);
+                                        }
+                                        closedir(rep);
+                                    }
+                                }
                             }
                             
-                            if (strcmp(cmd[0], "cd") == 0) {
-                                if (chdir(rep) == -1) {
-                                    perror("cd");
-                                }
-                            } else if (strcmp(cmd[0], "dir") == 0) {
-                                DIR *rep = opendir(chemin_dir);
-                                if (rep == NULL) {
-                                    perror("dir");
-                                } else {
-                                    struct dirent *ent;
-                                    while ((ent = readdir(rep)) != NULL) {
-                                        printf("%s\n", ent->d_name);
-                                    }
-                                    closedir(rep);
-                                }
-                            }
-                        }
-                        
-                        else {
-
-                            printf("commande : ");
+                            else {
+                                printf("commande : ");
+                                pipe(tube);
                                 pid_t pid_fils = fork();
                                 printf("%s ", cmd[0]);
                                 if (pid_fils == -1) {
                                     perror("Error création du processus");
                                     exit(EXIT_FAILURE);
                                 } else if (pid_fils == 0) {
-                                    
-                                    if (indexseq != 0) {
-                                        dup2(tube1[0], 0);
+
+                                    if (tube_precedent != -1){
+                                        dup2(tube_precedent, 0);
+                                        close(tube_precedent);
                                     }
 
-                                    if (commande->seq[indexseq + 1] != NULL) {
-                                        dup2(tube2[1], 1);
+                                    if (commande->seq[indexseq + 1] != NULL){
+                                        dup2(tube[1],1);
                                     }
 
-                                    if (indexseq != 0) {
-                                        close(tube1[0]);
-                                        close(tube1[1]);
-                                    }
-
-                                    if (commande->seq[indexseq + 1] != NULL) {
-                                        close(tube2[0]);
-                                        close(tube2[1]);
-                                    }
+                                    close(tube[0]);
+                                    close(tube[1]);
 
                                     if (commande->backgrounded != NULL) {
                                         setpgrp();
@@ -220,17 +205,14 @@ int main(void) {
                                         perror("Error execution");
                                         exit(EXIT_FAILURE);
                                     }
+                                
                                 } else {
                                     
-                                    if (indexseq != 0) {
-                                        close(tube1[0]);
-                                        close(tube1[1]);
+                                    if (tube_precedent != -1) {
+                                        close(tube_precedent);
                                     }
-
-                                    if (commande->seq[indexseq + 1] != NULL) {
-                                        close(tube2[0]);
-                                        close(tube2[1]);
-                                    }
+                                    close(tube[1]);
+                                    tube_precedent = tube[0];
 
                                     if (commande->backgrounded == NULL) {
                                         pid_forground = pid_fils;
@@ -240,10 +222,10 @@ int main(void) {
                                         }
                                     }
                                 }
-                            printf("\n");
+                                printf("\n");
+                            }
+                            indexseq++;
                         }
-
-                        indexseq++;
                     }
                 }
             }
