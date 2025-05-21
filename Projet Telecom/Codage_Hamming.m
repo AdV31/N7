@@ -15,6 +15,8 @@ Ns=1/(Rs*Te);         %Facteur de suréchantillonnage
 
 k=4;          %Nombre de bits par mot d'information
 n=7;          %Nombre de bits par mot codé
+Rs2=Rs*k/n; %Débit symbole
+Ns2 = floor(1/((floor(Rs2))*Te));
 P = [1 0 1 ; 1 1 1; 1 1 0; 0 1 1];
 G = [eye(k) P]; %Matrice de codage
 
@@ -30,6 +32,20 @@ H = [P' eye(n-k)];
 tab_Eb_N0_dB=[0:6];
 %Passage au SNR en linéaire
 tab_Eb_N0=10.^(tab_Eb_N0_dB/10);
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%GENERATION DE L'INFORMATION BINAIRE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Lecture de l'image
+image = imread('dcode-image.png');
+%Visualisation
+figure
+imshow(image)
+%Transformation de l'image en un train binaire
+vect_image=reshape(image,1,size(image,1)*size(image,2));
+mat_image_binaire=de2bi(vect_image);
+bits=double(reshape(mat_image_binaire,1,size(mat_image_binaire,1)*size(mat_image_binaire,2)));
+N = numel(bits);
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % BOUCLE SUR LES NIVEAUX DE Eb/N0 A TESTER
@@ -61,7 +77,7 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
         %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %GENERATION DE L'INFORMATION BINAIRE
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        bits=randi([0,1],1,N);
+        %bits=randi([0,1],1,N);
         bits=reshape(bits,k,N/k)'; %Reshape pour avoir 250 mots de 4 bits
 
         %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -76,12 +92,13 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
         symboles_BPSK= 2*Codes-1; %Mapping BPSK
-        symboles_dico = 2.*B-1;
+        symboles_dico = 2.*B_vect-1;
         
         %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %SURECHANTILLONNAGE
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         somme_Diracs_ponderes_BPSK=kron(symboles_BPSK,[1 zeros(1,Ns-1)]);
+        somme_Diracs_ponderes_utile=kron(symboles_BPSK,[1 zeros(1,Ns2-1)]);
         somme_Diracs_ponderes_dico=kron(symboles_dico,[1 zeros(1,Ns-1)]);
         
         %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -91,6 +108,7 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
         h=  ones(1,Ns);
         %Filtrage de mise en forme
         Signal_emis_BPSK=filter(h,1,somme_Diracs_ponderes_BPSK);
+        Signal_emis_utile=filter(h,1,somme_Diracs_ponderes_utile);
         Signal_emis_dico=filter(h,1,somme_Diracs_ponderes_dico);
         
         %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -133,15 +151,19 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
         bits_recus_BPSK_souple=zeros(N/k,k);
+        Signal_echantillonne_BPSK=reshape(Signal_echantillonne_BPSK,N/k,n);
+        Signal_echantillonne_dico=reshape(Signal_echantillonne_dico,2^k,n);
         for i=1:N/k
             %Calcul de la distance de Hamming entre le mot reçu et tous les mots codés possibles
-            distances= zeros(1,2^k);
+            distances_souple= zeros(1,2^k);
             for j=1:2^k
-                distances(j)=norm(Signal_echantillonne_BPSK(i) - Signal_echantillonne_dico(j));
+                distances_souple(j) = norm(Signal_echantillonne_BPSK(i,:) - Signal_echantillonne_dico(j,:));
             end
-            [mini,indmin] = min(distances);
-            bits_recus_BPSK_souple(i,:)=B(indmin,:);
+            [mini,indmin] = min(distances_souple);
+            bits_recus_BPSK_souple(i,:)= T(indmin,:);
         end
+        bits_recus_BPSK_souple=bits_recus_BPSK_souple(:);
+        Signal_echantillonne_BPSK=Signal_echantillonne_BPSK(:).';
 
         %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %DECISIONS SUR LES SYMBOLES
@@ -210,6 +232,34 @@ TES_THEO_BPSK= 2*((M - 1)/M)*qfunc(sqrt((6*log2(M)*tab_Eb_N0)/(M^2 - 1)));
 TEB_THEO_BPSK=TES_THEO_BPSK/log2(M);
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%DSP SIMULE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+DSP_simule = pwelch(Signal_emis_utile,[],[],[],Fe,"twosided");
+taille = numel(DSP_simule);
+freq = 0:Fe/taille:(taille-1)*Fe/taille;
+maxi = max(DSP_simule);
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%DSP THEORIQUE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Ts = 1/Rs;
+DSP_theorique = pwelch(Signal_emis_BPSK,[],[],[],Fe,"twosided");
+taille2 = numel(DSP_theorique);
+freq2 = 0:Fe/taille2:(taille2-1)*Fe/taille2;
+maxt = max(DSP_theorique);
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%RECUPERATION DE L'IMAGE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Reconstruction de l'image à partir de la suite binaire
+mat_image_binaire_retrouvee=reshape(bits_recus_BPSK_souple,211*300,8);
+mat_image_decimal_retrouvee=bi2de(mat_image_binaire_retrouvee);
+image_retrouvee=reshape(mat_image_decimal_retrouvee,211,300);
+%Visualisation
+figure
+imshow(uint8(image_retrouvee))
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %TRACES DES TES ET TEB OBTENUS EN FONCTION DE Eb/N0
 %COMPARAISON AVEC LES TES et TEBs THEORIQUES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -230,3 +280,15 @@ semilogy(tab_Eb_N0_dB, TEB_simule_BPSK_Souple,'g-o')
 legend('TEB théorique BPSK','TEB simulé dur BPSK', 'TEB simulé souple BPSK')
 xlabel('E_b/N_0 (dB)')
 ylabel('TEB')
+
+figure
+semilogy(freq, fftshift(DSP_simule)/maxi,'r')
+title('DSP simule BPSK')
+xlabel("Frequence (Hz)")
+ylabel("DSP")
+
+figure
+semilogy(freq2, fftshift(DSP_theorique)/maxt,'b')
+title('DSP théorique BPSK')
+xlabel("Frequence (Hz)")
+ylabel("DSP")
