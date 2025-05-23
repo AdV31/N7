@@ -155,11 +155,15 @@ int main(void) {
                             
                             else {
                                 printf("commande : ");
+
+                                
                                 int t = pipe(tube);
                                 if (t == -1){
                                     perror("Error création du tube");
                                     exit(EXIT_FAILURE);
                                 }
+                                
+
                                 pid_t pid_fils = fork();
                                 printf("%s ", cmd[0]);
                                 if (pid_fils == -1) {
