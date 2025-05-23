@@ -9,7 +9,7 @@
   columns: (2.5fr, auto),
   gutter: 4.5em,
   [
-    #box(image("INP.jpeg", width: 10em)),
+    #box(image("INP.png", width: 10em)),
     
   ],
   [
@@ -78,7 +78,7 @@
   align(line(length: 95%, stroke: black),right)
   
   align(text("",size : 23pt),center)
-  
+
   // table of contents.
   outline( depth: profondeur , indent : 2em )
 
