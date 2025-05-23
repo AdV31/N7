@@ -20,7 +20,8 @@
 
 Durant ce module de Calcul Scientifique, il nous a été demandé de réaliser un projet en binôme en utilisant Matlab. Ce dernier s’est déroulé sur deux séances : la première sur l’algorithme de la méthode de la puissance itérée avec différentes améliorations telles que l’approche en blocs et la déflation, puis la seconde sur une application de ces fonctions dans le cas de compression d’images.
 
-= Première Partie : Power Method Algorithm and Deflation
+= Première Partie : Power Method Algorithm and Subspace Iteration Method
+
 
 == Introduction et limitations de la méthode de la puissance itérée
 \
@@ -57,12 +58,12 @@ Les coûts de calcul principaux sont les produits vectoriels : réduire leur usa
     $v = z/ norm(z)_2$\
     $z = A * v$\
     $β_"old" = β$\
-    $β = v^T * z$\
-  until $|β − β_"old"| / |β_"old"| < ε #d$\
+    $β = v^T * z#d$\
+  until $|β − β_"old"| / |β_"old"| < ε$\
   $λ_1 = β and v_1 = v$\
 ],
 
-  caption: [Algorythme de la puissance itérée avec deflation]
+  caption: [Algorithme de la puissance itérée avec déflation]
 )
 \
 
@@ -73,7 +74,7 @@ Notre objectif est maintenant d’étendre cette méthode à des blocs de couple
 == Extension de la méthode de la puissance itérée à un espace propre dominant
 \
 
-Cette fois nous allons devoir implémenter cette nouvelle méthode dans un nouveau fichier “subspace_iter_v0.m”. La différence ici, c’est que notre algorithme va tendre vers une matrice V contenant les m différents vecteurs propres de A, en passant par une décomposition spectrale et une orthonormalisation de celle-ci.\
+Cette fois nous devoir implémenter cette nouvelle méthode dans un nouveau fichier “subspace_iter_v0.m”. La différence ici, c’est que notre algorithme va tendre vers une matrice V contenant les m différents vecteurs propres de A, en passant par une décomposition spectrale et une orthonormalisation de celle-ci.\
 
 L’algorithme ressemble grandement au précédent, si ce n’est que les conditions d’arrêt diffèrent, et que l’on doit orthonormaliser. Voici le résultat :\
 
@@ -110,7 +111,7 @@ L’algorithme ressemble grandement au précédent, si ce n’est que les condit
 Compute the corresponding eigenspace $V_"out" = V * X$\
 ],
 
-  caption: [Algorythme de la puissance itérée avec deflation et orthonormalisation]
+  caption: [Algorithme de la puissance itérée avec déflation et orthonormalisation]
 )
 \
 
@@ -143,7 +144,7 @@ Il est intéressant de noter que, bien que l’on cherche à ne pas faire la dé
   $["W", "indice"] = "sort(diag(DH), 'descend')"$\
 ],
 
-  caption: [Algorythme de projection de Rayleigh-Ritz]
+  caption: [Algorithme de projection de Rayleigh-Ritz]
 )
 \
 
@@ -183,7 +184,7 @@ Notre programme va naturellement être modifié pour prendre en compte ce change
   until (#emph[PercentReached] > #emph[PercentTrace] or $n_"ev" = m or k >$ #emph[MaxIter]) \
 ],
 
-  caption: [Algorythme de la puissance itérée avec deflation et orthonormalisation]
+  caption: [Algorithme de la puissance itérée avec deflation et orthonormalisation]
 )
 \
 
@@ -236,7 +237,7 @@ Nous pouvons constater que l’orthonormalisation, coûteuse algorithmiquement p
   until (#emph[PercentReached] > #emph[PercentTrace] or $n_"ev" = m or k >$ #emph[MaxIter]) \
 ],
 
-  caption: [Algorythme de la puissance itérée avec deflation et orthonormalisation par block]
+  caption: [Algorithme de la puissance itérée avec déflation et orthonormalisation par blocs]
 )
 \
 
@@ -289,7 +290,7 @@ Ainsi, voici le programme “subspace_iter_v3.m” :\
   until (#emph[PercentReached] > #emph[PercentTrace] $or n_"ev" = m or k >$ #emph[MaxIter]) \
 ],
 
-  caption: [Algorythme de la puissance itérée avec deflation et orthonormalisation par block]
+  caption: [Algorithme de la puissance itérée avec deflation et orthonormalisation par blocs]
 )
 \
 
@@ -300,7 +301,7 @@ Voici les différentes distributions des valeurs propres en fonction de imat :\
 
 #figure(
   image("Courbe_vpropre.png", width: 70%),
-  caption : [Tableau de données TP02]
+  caption : [Distribution des valeurs propres en fonction de la taille et du type de la matrice]
 )
 \
 
@@ -314,7 +315,7 @@ Voici le bilan des tests des différentes versions en fonction du type et de la 
 
 \
 
-= Seconde Partie : Subspace Iteration Method
+= Seconde Partie : Compression d’images
 \
 == Présentation des objectifs
 \
@@ -395,7 +396,7 @@ De plus, lorsque q < p, l’image passe en format paysage.
   ylabel('RMSE')\
 ],
 
-  caption: [Algorythme de la puissance itérée avec deflation]
+  caption: [Algorithme de la puissance itérée avec deflation]
 )
 \
 
