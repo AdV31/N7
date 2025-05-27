@@ -144,11 +144,11 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
         signal_souple = Signal_echantillonne_BPSK/Ns;
 
         for i = 1:2:numel(signal_souple)
-            code_courant = signal_souple(i:i+1); %On prend 2 bits à la fois
+            code_courant_souple = signal_souple(i:i+1); %On prend 2 bits à la fois
 
             distance_souple = zeros(1,8); %On réinitialise le tableau de distance
             for j = 1:8
-                distance_souple(j) = (code_courant(1) + dico_symb(j,1)).^2 + (code_courant(2) + dico_symb(j,2)).^2;
+                distance_souple(j) = (code_courant_souple(1) + dico_symb(j,1)).^2 + (code_courant_souple(2) + dico_symb(j,2)).^2;
             end
 
             poids_totaux_souple = [poids_souple poids_souple] + distance_souple;
