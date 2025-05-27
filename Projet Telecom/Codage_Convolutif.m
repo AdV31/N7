@@ -138,8 +138,7 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
         poids_souple = [0 8 8 8];
         chemin_souple = zeros(4,N); %Initialisation du tableau de chemin
         chemin_partiel_souple = zeros(4,N); %Initialisation du tableau de chemin partiel
-        precedent_souple = zeros(1,4);
-        dico_symb = [ -1, -1; 1,1; -1,1; 1, -1; 1,1; -1, -1; 1, -1; -1,1]; %Dictionnaire des codes
+        dico_symb = [ 1, 1; -1, -1; 1, -1; -1, 1; -1, -1; 1, 1; -1, 1; 1, -1]; %Dictionnaire des codes
 
         signal_souple = Signal_echantillonne_BPSK/Ns;
 
@@ -148,7 +147,7 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
 
             distance_souple = zeros(1,8); %On réinitialise le tableau de distance
             for j = 1:8
-                distance_souple(j) = (code_courant_souple(1) + dico_symb(j,1)).^2 + (code_courant_souple(2) + dico_symb(j,2)).^2;
+                distance_souple(j) = (code_courant_souple(1) - dico_symb(j,1)).^2 + (code_courant_souple(2) - dico_symb(j,2)).^2;
             end
 
             poids_totaux_souple = [poids_souple poids_souple] + distance_souple;
@@ -204,7 +203,6 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
         poids = [0 8 8 8];
         chemin = zeros(4,N); %Initialisation du tableau de chemin
         chemin_partiel = zeros(4,N); %Initialisation du tableau de chemin partiel
-        precedent = zeros(1,4);
         dico_bits = [0 0; 1 1; 0 1; 1 0; 1 1; 0 0; 1 0; 0 1]; %Dictionnaire des codes
         distance = zeros(1,8); %Initialisation du tableau de distance
         for i = 1:2:numel(Codes_recus_BPSK)
