@@ -7,7 +7,7 @@ close all
 Fe=12000;       %Fréquence d'échantillonnage
 Te=1/Fe;        %Période d'échantillonnage
 Rb=3000;        %Débit binaire souhaité
-N=10;         %Nombre de bits générés
+N=1000;         %Nombre de bits générés
 
 M= 2;         %Ordre de la modulation(BPSK est binaire donc M=2)
 Rs= Rb;         %Débit symbole
@@ -135,22 +135,22 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
         %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %Decodage Souple
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        poids_souple = [0 8 8 8];
+        poids_souple = [0 36 36 36];
         chemin_souple = zeros(4,N); %Initialisation du tableau de chemin
         chemin_partiel_souple = zeros(4,N); %Initialisation du tableau de chemin partiel
-        dico_symb = [ 1, 1; -1, -1; 1, -1; -1, 1; -1, -1; 1, 1; -1, 1; 1, -1]; %Dictionnaire des codes
+        dico_symb = [ -1, -1; 1, 1; -1, 1; 1, -1; 1, 1; -1, -1; 1, -1; -1, 1]; %Dictionnaire des codes
 
-        signal_souple = Signal_echantillonne_BPSK/Ns;
+        signal_souple = Signal_echantillonne_BPSK/mean(abs(Signal_echantillonne_BPSK));
 
         for i = 1:2:numel(signal_souple)
             code_courant_souple = signal_souple(i:i+1); %On prend 2 bits à la fois
 
             distance_souple = zeros(1,8); %On réinitialise le tableau de distance
             for j = 1:8
-                distance_souple(j) = (code_courant_souple(1) - dico_symb(j,1)).^2 + (code_courant_souple(2) - dico_symb(j,2)).^2;
+                distance_souple(j) = sum((code_courant_souple - dico_symb(j,:)).^2);
             end
 
-            poids_totaux_souple = [poids_souple poids_souple] + distance_souple;
+            poids_totaux_souple = repmat(poids_souple,1,2) + distance_souple;
             k = 1;
             for j = 1:4
                 tab_poids = [poids_totaux_souple(k), poids_totaux_souple(k+1)];
@@ -170,9 +170,10 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
             chemin_souple = chemin_partiel_souple;
 
         end
+        
         %On récupère le chemin le plus court
-        [~, ind_min_final] = min(poids_souple);
-        chemin_final_souple = [chemin_souple(ind_min_final,:) ind_min_final];
+        [~, ind_min_final_souple] = min(poids_souple);
+        chemin_final_souple = [chemin_souple(ind_min_final_souple,:) ind_min_final_souple];
         chemin_final_souple = chemin_final_souple(2:end); %On enlève le premier bit qui est toujours 0
 
 
@@ -233,6 +234,7 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
             chemin = chemin_partiel;
 
         end
+        
         %On récupère le chemin le plus court
         [~, ind_min_final] = min(poids);
         chemin_final = [chemin(ind_min_final,:) ind_min_final];
