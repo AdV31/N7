@@ -169,7 +169,7 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
         %DECISIONS SUR LES SYMBOLES
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         symboles_recus_BPSK=sign(Signal_echantillonne_BPSK);
-               
+
         %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %CALCUL DU TAUX D'ERREUR SYMBOLE CUMULE
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
