@@ -75,7 +75,6 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
 
         for i=3:N + 2
             code = [code, bits_codage(i) + bits_codage(i-2), bits_codage(i) + bits_codage(i-1) + bits_codage(i-2)];
-            
         end
         code = mod(code, 2);
 

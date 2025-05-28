@@ -7,7 +7,7 @@ close all
 Fe=12000;       %Fréquence d'échantillonnage
 Te=1/Fe;        %Période d'échantillonnage
 Rb=3000;        %Débit binaire souhaité
-N=100;         %Nombre de bits générés
+N=20;         %Nombre de bits générés
 
 M= 2;         %Ordre de la modulation(BPSK est binaire donc M=2)
 Rs= Rb;         %Débit symbole
@@ -79,7 +79,7 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
     % BOUCLE POUR PRECISION TES ET TEBS MESURES :COMPTAGE NOMBRE ERREURS
     % (voir annexe texte TP)
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    while(nb_erreurs<100)
+    while(nb_erreurs<10)
 
         %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %GENERATION DE L'INFORMATION BINAIRE
