@@ -1,3 +1,10 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Projet Telecommunications : Codage Canal
+% Implémentation d'un codage convolutif avec décodage de Viterbi
+% Auteur: BALOT Louise VIGNAUX Adrien
+% Groupe: M
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 clear all
 close all
 
@@ -17,20 +24,6 @@ Ns=1/(Rs*Te);         %Facteur de suréchantillonnage
 tab_Eb_N0_dB=[0:6];
 %Passage au SNR en linéaire
 tab_Eb_N0=10.^(tab_Eb_N0_dB/10);
-
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%GENERATION DE L'INFORMATION BINAIRE
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%Lecture de l'image
-%image = imread('dcode-image.png');
-%%Visualisation
-%figure
-%imshow(image)
-%%Transformation de l'image en un train binaire
-%vect_image=reshape(image,1,size(image,1)*size(image,2));
-%mat_image_binaire=de2bi(vect_image);
-%bits=double(reshape(mat_image_binaire,1,size(mat_image_binaire,1)*size(mat_image_binaire,2)));
-%N = numel(bits);
 
 bits = randi([0,1],1,N);
 
@@ -102,7 +95,7 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
         %CANAL DE PROPAGATION AWGN
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %POUR MODULATION BPSK
-        %Calcul de la puissance du signal émis en 4-ASK
+        %Calcul de la puissance du signal émis
         P_signal= mean(abs(Signal_emis_BPSK).^2);
 
         %Calcul de la puissance du bruit à ajouter au signal pour obtenir la valeur
@@ -278,27 +271,6 @@ TES_THEO_BPSK= 2*((M - 1)/M)*qfunc(sqrt((6*log2(M)*tab_Eb_N0)/(M^2 - 1)));
 %TEBs THEORIQUES CHAINES IMPLANTEES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 TEB_THEO_BPSK=TES_THEO_BPSK/log2(M);
-%TEB_THEO_BPSK= qfunc(sqrt(2*tab_Eb_N0));
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%DSP SIMULE
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%DSP THEORIQUE
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%RECUPERATION DE L'IMAGE
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%Reconstruction de l'image à partir de la suite binaire
-%mat_image_binaire_retrouvee=reshape(bits_recus_BPSK_souple,211*300,8);
-%mat_image_decimal_retrouvee=bi2de(mat_image_binaire_retrouvee);
-%image_retrouvee=reshape(mat_image_decimal_retrouvee,211,300);
-%%Visualisation
-%figure
-%imshow(uint8(image_retrouvee))
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %TRACES DES TES ET TEB OBTENUS EN FONCTION DE Eb/N0

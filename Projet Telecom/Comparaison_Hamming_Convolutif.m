@@ -1,3 +1,10 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Projet Telecommunications : Codage Canal
+% Comparaison des performances des deux codages et décodages
+% Auteur: BALOT Louise VIGNAUX Adrien
+% Groupe: M
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 clear all
 close all
 
@@ -79,7 +86,13 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
     % BOUCLE POUR PRECISION TES ET TEBS MESURES :COMPTAGE NOMBRE ERREURS
     % (voir annexe texte TP)
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    while(nb_erreurs<10)
+    while(nb_erreurs<100)
+
+        if nb_cumul > 100000
+            if nb_erreurs < 100
+                break;
+            end
+        end
 
         %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %GENERATION DE L'INFORMATION BINAIRE
@@ -92,7 +105,7 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
         % Codage Hamming
-        bits_Hamming = reshape(bits,k,N/k)'; %Reshape pour avoir 250 mots de 4 bits
+        bits_Hamming = reshape(bits,N/k,k); %Reshape pour avoir 250 mots de 4 bits
         Codes = mod(bits_Hamming*G,2); %Codage de la séquence d'information
         Codes= Codes(:)';
         B_vect = B(:)';
@@ -137,7 +150,7 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
         %CANAL DE PROPAGATION AWGN
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %POUR MODULATION BPSK
-        %Calcul de la puissance du signal émis en 4-ASK
+        %Calcul de la puissance du signal émis
         P_signal_Hamming= mean(abs(Signal_emis_BPSK_Hamming).^2);
         P_signal_Convo= mean(abs(Signal_emis_BPSK_Convo).^2);
 
@@ -277,7 +290,7 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
             [mini,indmin] = min(distances);
             bits_recus_BPSK_Hamming(i,:)=T(indmin,:);
         end
-        bits_recus_BPSK_Hamming=bits_recus_BPSK_souple_Hamming(:);
+        bits_recus_BPSK_Hamming=bits_recus_BPSK_Hamming(:);
         bits_Hamming = bits_Hamming(:);
 
         % DECODAGE DUR BPSK Viterbi
@@ -329,15 +342,15 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
         %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %CALCUL DU TAUX D'ERREUR BINAIRE CUMULE
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        TEB_BPSK_Hamming=TEB_BPSK_Hamming+numel(find(bits_Hamming ~= bits_recus_BPSK_Hamming))/numel(bits_Hamming);
+        TEB_BPSK_Hamming=TEB_BPSK_Hamming+numel(find(bits.' ~= bits_recus_BPSK_Hamming))/numel(bits);
         TEB_BPSK_Convo=TEB_BPSK_Convo+numel(find(bits ~= bits_recus_BPSK_Convo))/numel(bits);
-        TEB_BPSK_Souple_Hamming =TEB_BPSK_Souple_Hamming+numel(find(bits_Hamming ~= bits_recus_BPSK_souple_Hamming))/numel(bits_Hamming);
+        TEB_BPSK_Souple_Hamming =TEB_BPSK_Souple_Hamming+numel(find(bits.' ~= bits_recus_BPSK_souple_Hamming))/numel(bits);
         TEB_BPSK_Souple_Convo =TEB_BPSK_Souple_Convo+numel(find(bits ~= bits_recus_BPSK_souple_Convo))/numel(bits);
 
         %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %CUMUL DU NOMBRE D'ERREURS ET NOMBRE DE CUMUL REALISES
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        nb_erreurs_Hamming= nb_erreurs+numel(find(bits_Hamming ~= bits_recus_BPSK_Hamming));
+        nb_erreurs_Hamming= nb_erreurs+numel(find(bits ~= bits_recus_BPSK_Hamming));
         nb_erreurs_Convo= nb_erreurs+numel(find(bits ~= bits_recus_BPSK_Convo));
         nb_erreurs=min(nb_erreurs_Hamming, nb_erreurs_Convo);
         nb_cumul=nb_cumul+1;
@@ -366,15 +379,6 @@ TES_THEO_BPSK= 2*((M - 1)/M)*qfunc(sqrt((6*log2(M)*tab_Eb_N0)/(M^2 - 1)));
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 TEB_THEO_BPSK=TES_THEO_BPSK/log2(M);
 %TEB_THEO_BPSK= qfunc(sqrt(2*tab_Eb_N0));
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%DSP SIMULE
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%DSP THEORIQUE
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %RECUPERATION DE L'IMAGE
@@ -394,8 +398,16 @@ TEB_THEO_BPSK=TES_THEO_BPSK/log2(M);
 figure
 semilogy(tab_Eb_N0_dB, TES_THEO_BPSK,'r-x')
 hold on
-semilogy(tab_Eb_N0_dB, TES_simule_BPSK,'b-o')
+semilogy(tab_Eb_N0_dB, TES_simule_BPSK_Hamming,'b-o')
 legend('TES théorique BPSK','TES simulé BPSK')
+xlabel('E_b/N_0 (dB)')
+ylabel('TES')
+
+figure
+semilogy(tab_Eb_N0_dB, TEB_THEO_BPSK,'r-x')
+hold on
+semilogy(tab_Eb_N0_dB, TEB_simule_BPSK_Hamming,'g-o')
+legend('TES théorique BPSK','TES simulé BPSK Convolutif')
 xlabel('E_b/N_0 (dB)')
 ylabel('TES')
 

@@ -1,6 +1,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% ETUDE MODULATEUR/DEMODULATEUR SUR CANAL AWGN
-% Nom Prénom, Avril 2024
+% Projet Telecommunications : Codage Canal
+% Implantation d'une chaine de transmission BPSK
+% Auteur: BALOT Louise VIGNAUX Adrien
+% Groupe: M
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clear all
@@ -77,7 +79,7 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
         %CANAL DE PROPAGATION AWGN
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %POUR MODULATION BPSK
-        %Calcul de la puissance du signal émis en 4-ASK
+        %Calcul de la puissance du signal émis
         P_signal= mean(abs(Signal_emis).^2);
 
         %Calcul de la puissance du bruit à ajouter au signal pour obtenir la valeur

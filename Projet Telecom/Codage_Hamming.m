@@ -1,3 +1,10 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Projet Telecommunications : Codage Canal
+% Implémentation d'un codage en blocs avec décodage de Hamming
+% Auteur: BALOT Louise VIGNAUX Adrien
+% Groupe: M
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 clear all
 close all
 
@@ -78,12 +85,12 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
         %GENERATION DE L'INFORMATION BINAIRE
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %bits=randi([0,1],1,N);
-        bits=reshape(bits,k,N/k)'; %Reshape pour avoir 250 mots de 4 bits
+        bits_reshape=reshape(bits,N/k,k); %Reshape pour avoir 250 mots de 4 bits
 
         %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %Codage
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        Codes = mod(bits*G,2); %Codage de la séquence d'information
+        Codes = mod(bits_reshape*G,2); %Codage de la séquence d'information
         Codes= Codes(:)';
         B_vect = B(:)';
         
@@ -115,7 +122,7 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
         %CANAL DE PROPAGATION AWGN
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %POUR MODULATION BPSK
-        %Calcul de la puissance du signal émis en 4-ASK
+        %Calcul de la puissance du signal émis
         P_signal= mean(abs(Signal_emis_BPSK).^2);
 
         %Calcul de la puissance du bruit à ajouter au signal pour obtenir la valeur
@@ -195,18 +202,18 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
             bits_recus_BPSK(i,:)=T(indmin,:);
         end
         bits_recus_BPSK=bits_recus_BPSK(:);
-        bits = bits(:);
+        bits_reshape = bits_reshape(:);
 
         %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %CALCUL DU TAUX D'ERREUR BINAIRE CUMULE
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        TEB_BPSK=TEB_BPSK+numel(find(bits ~= bits_recus_BPSK))/numel(bits);
-        TEB_BPSK_Souple =TEB_BPSK_Souple+numel(find(bits ~= bits_recus_BPSK_souple))/numel(bits);
+        TEB_BPSK=TEB_BPSK+numel(find(bits.' ~= bits_recus_BPSK))/numel(bits);
+        TEB_BPSK_Souple =TEB_BPSK_Souple+numel(find(bits.' ~= bits_recus_BPSK_souple))/numel(bits);
 
         %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %CUMUL DU NOMBRE D'ERREURS ET NOMBRE DE CUMUL REALISES
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        nb_erreurs=nb_erreurs+numel(find(bits ~= bits_recus_BPSK));
+        nb_erreurs=nb_erreurs+numel(find(bits.' ~= bits_recus_BPSK));
         nb_cumul=nb_cumul+1;
 
     end  %fin boucle sur comptage nombre d'erreurs
@@ -232,37 +239,43 @@ TES_THEO_BPSK= 2*((M - 1)/M)*qfunc(sqrt((6*log2(M)*tab_Eb_N0)/(M^2 - 1)));
 TEB_THEO_BPSK=TES_THEO_BPSK/log2(M);
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%DSP SIMULE
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-DSP_simule = pwelch(Signal_emis_utile,[],[],[],Fe,"twosided");
-taille = numel(DSP_simule);
-freq = 0:Fe/taille:(taille-1)*Fe/taille;
-maxi = max(DSP_simule);
-
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%DSP THEORIQUE
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Ts = 1/Rs;
-DSP_theorique = pwelch(Signal_emis_BPSK,[],[],[],Fe,"twosided");
-taille2 = numel(DSP_theorique);
-freq2 = 0:Fe/taille2:(taille2-1)*Fe/taille2;
-maxt = max(DSP_theorique);
-
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %RECUPERATION DE L'IMAGE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Reconstruction de l'image à partir de la suite binaire
-mat_image_binaire_retrouvee=reshape(bits_recus_BPSK_souple,211*300,8);
+mat_image_binaire_retrouvee=double(reshape(bits_recus_BPSK_souple,211*300,8));
 mat_image_decimal_retrouvee=bi2de(mat_image_binaire_retrouvee);
 image_retrouvee=reshape(mat_image_decimal_retrouvee,211,300);
+
 %Visualisation
 figure
+subplot(2,2,1),
+imshow(uint8(image))
+title('Image originale');
+subplot(2,2,2),
 imshow(uint8(image_retrouvee))
+title('Image retrouvée à partir de la suite binaire reçue souple');
+
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %TRACES DES TES ET TEB OBTENUS EN FONCTION DE Eb/N0
 %COMPARAISON AVEC LES TES et TEBs THEORIQUES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+figure
+semilogy(tab_Eb_N0_dB, TEB_THEO_BPSK,'r-x')
+hold on
+semilogy(tab_Eb_N0_dB, TEB_simule_BPSK,'b-o')
+legend('TEB théorique BPSK','TEB simulé BPSK Dur')
+xlabel('E_b/N_0 (dB)')
+ylabel('TEB')
+
+figure
+semilogy(tab_Eb_N0_dB, TEB_THEO_BPSK,'r-x')
+hold on
+semilogy(tab_Eb_N0_dB, TEB_simule_BPSK_Souple,'g-o')
+legend('TEB théorique BPSK','TEB simulé BPSK souple')
+xlabel('E_b/N_0 (dB)')
+ylabel('TEB')
+
 figure
 semilogy(tab_Eb_N0_dB, TES_THEO_BPSK,'r-x')
 hold on
@@ -280,15 +293,3 @@ semilogy(tab_Eb_N0_dB, TEB_simule_BPSK_Souple,'g-o')
 legend('TEB théorique BPSK','TEB simulé dur BPSK', 'TEB simulé souple BPSK')
 xlabel('E_b/N_0 (dB)')
 ylabel('TEB')
-
-figure
-semilogy(freq, fftshift(DSP_simule)/maxi,'r')
-title('DSP simule BPSK')
-xlabel("Frequence (Hz)")
-ylabel("DSP")
-
-figure
-semilogy(freq2, fftshift(DSP_theorique)/maxt,'b')
-title('DSP théorique BPSK')
-xlabel("Frequence (Hz)")
-ylabel("DSP")
