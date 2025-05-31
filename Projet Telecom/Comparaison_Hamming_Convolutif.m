@@ -22,8 +22,6 @@ Ns=1/(Rs*Te);         %Facteur de suréchantillonnage
 
 k=4;          %Nombre de bits par mot d'information
 n=7;          %Nombre de bits par mot codé
-Rs2=Rs*k/n; %Débit symbole
-Ns2 = floor(1/((floor(Rs2))*Te));
 P = [1 0 1 ; 1 1 1; 1 1 0; 0 1 1];
 G = [eye(k) P]; %Matrice de codage
 
@@ -43,17 +41,6 @@ tab_Eb_N0=10.^(tab_Eb_N0_dB/10);
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %GENERATION DE L'INFORMATION BINAIRE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%Lecture de l'image
-%image = imread('dcode-image.png');
-%%Visualisation
-%figure
-%imshow(image)
-%%Transformation de l'image en un train binaire
-%vect_image=reshape(image,1,size(image,1)*size(image,2));
-%mat_image_binaire=de2bi(vect_image);
-%bits=double(reshape(mat_image_binaire,1,size(mat_image_binaire,1)*size(mat_image_binaire,2)));
-%N = numel(bits);
-
 bits = randi([0,1],1,N);
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

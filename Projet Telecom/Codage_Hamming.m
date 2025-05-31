@@ -22,8 +22,6 @@ Ns=1/(Rs*Te);         %Facteur de suréchantillonnage
 
 k=4;          %Nombre de bits par mot d'information
 n=7;          %Nombre de bits par mot codé
-Rs2=Rs*k/n; %Débit symbole
-Ns2 = floor(1/((floor(Rs2))*Te));
 P = [1 0 1 ; 1 1 1; 1 1 0; 0 1 1];
 G = [eye(k) P]; %Matrice de codage
 
@@ -53,6 +51,8 @@ vect_image=reshape(image,1,size(image,1)*size(image,2));
 mat_image_binaire=de2bi(vect_image);
 bits=double(reshape(mat_image_binaire,1,size(mat_image_binaire,1)*size(mat_image_binaire,2)));
 N = numel(bits);
+
+%bits=randi([0,1],1,N);
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % BOUCLE SUR LES NIVEAUX DE Eb/N0 A TESTER
@@ -84,7 +84,6 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
         %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %GENERATION DE L'INFORMATION BINAIRE
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %bits=randi([0,1],1,N);
         bits_reshape=reshape(bits,N/k,k); %Reshape pour avoir 250 mots de 4 bits
 
         %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -105,7 +104,6 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
         %SURECHANTILLONNAGE
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         somme_Diracs_ponderes_BPSK=kron(symboles_BPSK,[1 zeros(1,Ns-1)]);
-        somme_Diracs_ponderes_utile=kron(symboles_BPSK,[1 zeros(1,Ns2-1)]);
         somme_Diracs_ponderes_dico=kron(symboles_dico,[1 zeros(1,Ns-1)]);
         
         %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -115,7 +113,6 @@ for indice_bruit=1:length(tab_Eb_N0_dB)
         h=  ones(1,Ns);
         %Filtrage de mise en forme
         Signal_emis_BPSK=filter(h,1,somme_Diracs_ponderes_BPSK);
-        Signal_emis_utile=filter(h,1,somme_Diracs_ponderes_utile);
         Signal_emis_dico=filter(h,1,somme_Diracs_ponderes_dico);
         
         %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
