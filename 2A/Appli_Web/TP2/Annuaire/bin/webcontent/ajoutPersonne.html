@@ -1,0 +1,115 @@
+ajoutPersonne.html
+<html>
+    <head><title>Ajout d'une Personne</title></head>
+    <body>
+        <form action="Serv" method="post">
+
+        <label for="nom">Nom : </label>
+        <input type="text" id="nom" name="nom"><br>
+
+        <label for="prenom">Prenom : </label>
+        <input type="text" id="prenom" name="prenom"><br>
+        <input type="hidden" name="op" value="ajouterPersonne">
+
+        <button type="submit">Ajouter</button>
+    </form>
+
+    </body>
+
+
+ajoutAdresse.html
+<html>
+    <head><title>Ajout d'une Adresse</title></head>
+    <body>
+        <form action="Serv" method="post">
+
+        <label for="rue">Rue : </label>
+        <input type="text" id="rue" name="rue"><br>
+
+        <label for="ville">Ville : </label>
+        <input type="text" id="ville" name="ville"><br>
+
+        <input type="hidden" name="op" value="ajouterAdresse">
+
+        <button type="submit">Ajouter</button>
+    </form>
+
+    </body>
+
+
+index.html
+<>
+    <head><title>Index</title></head>
+
+    <br>
+        <h1>Bienvenue sur la page d'accueil</h1>
+        <a href="ajoutPersonne.html">Ajouter une personne</a></br>
+        <a href="ajoutAdresse.html">Ajouter une adresse</a></br>
+        <a href="Serv?op=associerForm">Associer</a></br>
+        <a href="Serv?op=listerPersonne">Lister les personnes</a></br>
+    </body>
+</html>
+
+
+associer.jsp
+<%@  page language="java" import="pack.*, java.util.*" contentType="text/html;charset=UTF-8" %>
+<html>
+    <head> <title>Associer une adresse à une personne</title> </head>
+    <body>
+        <form action="Serv" method="post">
+            <ul>
+                <% Collection<Personne> personnes = (Collection<Personne>) request.getAttribute("personnes");
+                for (Personne p : personnes) {
+                    String nomComplet = p.getPrenom() + " " + p.getNom();
+                    int personneid = p.getId();%>
+                <li>
+                    <label for="personneId"><%= nomComplet %> : </label>
+                    <input type="radio" id="personne" name="personneId" value="<%= personneid %>">
+                </li>
+                    <url>
+                        <% Collection<Adresse> adresses = (Collection<Adresse>) request.getAttribute("adresses");
+                            for (Adresse a : adresses) {
+                                String adresseComplete = a.getRue() + ", " + a.getVille();
+                                int adresseid = a.getId(); %>
+                        <li><blockquote>
+                            <label for="adresseId"><%= adresseComplete %> : </label>
+                            <input type="radio" id="adresse" name="adresseId" value="<%= adresseid %>">
+                        </blockquote></li>
+                        <% } %>
+                    </url>
+                </li>
+                <% } %>
+            </ul>
+            <input type="hidden" name="op" value="associer" >
+            <button type="submit">Associer</button>
+        </form>
+    </body>
+</html>
+
+
+listerPersonne.jsp
+<%@  page language="java" import="pack.*, java.util.*" contentType="text/html;charset=UTF-8" %>
+<html>
+    <head> <title>Liste des personnes</title> </head>
+    <body>
+        <h1>Liste des personnes</h1>
+        <ul>
+            <% Collection<Personne> personnes = (Collection<Personne>) request.getAttribute("personnes");
+               for (Personne p : personnes) {
+                  String nomComplet = p.getPrenom() + " " + p.getNom(); %>
+            <li><%= nomComplet %>
+                <url>
+                    <% Collection<Adresse> adresses = (Collection<Adresse>) request.getAttribute("adresses");
+                        String adresseComplete = "";
+                        for (Adresse a : adresses) {
+                            if (a.getPersonneId() == p.getId()) {
+                                adresseComplete = a.getRue() + ", " + a.getVille();%>
+                                <li><blockquote><%= adresseComplete %></blockquote></li>
+                            <% }%>
+                    <% } %>
+                </url>
+            </li>
+            <% } %>
+        </ul>
+    </body>
+</html>

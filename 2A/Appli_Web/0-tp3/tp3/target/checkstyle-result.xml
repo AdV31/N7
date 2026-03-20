@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.5">
+<file name="/data/userdata/Fichiers/Documents/Cours/AppliWeb/TPs/tp3/src/main/java/modele/Personne.java">
+</file>
+<file name="/data/userdata/Fichiers/Documents/Cours/AppliWeb/TPs/tp3/src/main/java/modele/Adresse.java">
+</file>
+<file name="/data/userdata/Fichiers/Documents/Cours/AppliWeb/TPs/tp3/src/main/java/pack/Serv.java">
+</file>
+<file name="/data/userdata/Fichiers/Documents/Cours/AppliWeb/TPs/tp3/src/main/java/vue/Facade.java">
+</file>
+<file name="/data/userdata/Fichiers/Documents/Cours/AppliWeb/TPs/tp3/src/test/java/org/jboss/as/quickstarts/helloworld/HelloWorldServletIT.java">
+</file>
+<file name="/data/userdata/Fichiers/Documents/Cours/AppliWeb/TPs/tp3/src/test/java/org/jboss/as/quickstarts/helloworld/managed/ManagedHelloWorldServletIT.java">
+</file>
+<file name="/data/userdata/Fichiers/Documents/Cours/AppliWeb/TPs/tp3/src/main/resources/META-INF/persistence.xml">
+</file>
+</checkstyle>
