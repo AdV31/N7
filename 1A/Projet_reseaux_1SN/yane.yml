@@ -1,0 +1,82 @@
+network:
+  name: Projet_reseaux
+  version: 0.1
+  hosts:
+    - Client1
+      mode : netns
+      init : ./scripts/Client1
+ 
+    - Client2
+      mode : netns
+      init : ./scripts/Client2
+ 
+    - SWEB_utilisateur
+      mode : docker
+      image : apache_n7:latest
+      files : ./files/SWEB_utilisateur/var:/
+ 
+ 
+    - BOX1
+      mode : docker
+      image : dhcp_n7:latest
+      files : ./files/BOX1/etc:/
+ 
+    - BOX2
+      mode : docker
+      image : dhcp_n7:latest
+      files : ./files/BOX2/etc:/
+ 
+    - FAI
+      mode : docker
+      image : quagga_n7:latest
+      files : ./files/FAI/etc:/
+ 
+ 
+    - R1
+      mode : docker
+      image : quagga_n7:latest
+      files : ./files/R1/etc:/
+ 
+    - R2
+      mode : docker
+      image : quagga_n7:latest
+      files : ./files/R2/etc:/
+ 
+    - Services
+      mode : docker
+      image : quagga_n7:latest
+      files : ./files/Services/etc:/
+ 
+    - Services_reseaux
+      mode : docker
+      image : quagga_n7:latest
+      files : ./files/Services_reseaux/etc:/
+ 
+    - SWEB
+      mode : docker
+      image : apache_n7:latest
+      files : ./files/SWEB/var:/
+ 
+    - DNS
+      mode : docker
+      image : dns_n7:latest
+      files : ./files/DNS/etc:/
+ 
+  links :
+    - Client1:eth0!BOX1:eth0
+    - BOX1:eth1!FAI:eth1
+    - BOX2:eth1!FAI:eth2
+    - R2:eth1!Services_reseaux:eth1
+    - Services:eth2!Services_reseaux:eth0
+    - R1:eth1!Services:eth1
+    - Services:eth0!SWEB:eth0
+    - Services_reseaux:eth2!DNS:eth0
+ 
+  bridges:
+    - Switch0
+      interfaces: BOX2:eth0!Client2:eth0!SWEB_utilisateur:eth0!
+    - Switch1
+      interfaces: FAI:eth0!R1:eth0!R2:eth0!
+ 
+  consoles :
+    - all
