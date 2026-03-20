@@ -1,8 +1,8 @@
 close all;
 clear all;
 
-load mat1;
-%load pde225_5e-1;
+%load mat1;
+load pde225_5e-1;
 %load hydcar20.mat;
 
 n = size(A,1);
@@ -12,7 +12,7 @@ b = [1:n]';
 
 x0 = zeros(n, 1);
 
-eps = 1e-6;
+eps = 5*1e-1;
 
 kmax = n;
 

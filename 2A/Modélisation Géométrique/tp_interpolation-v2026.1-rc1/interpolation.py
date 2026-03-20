@@ -20,18 +20,13 @@ def lagrange(YY: List[float], TT: List[float], t: float) -> float:
         float: The interpolated value at point t.
     """
 
-    l = [0 for i in range(len(TT))]
-    for i in range(len(TT)):
-        ti = TT[i]
-        prod = 1
-        for j in range(len(TT)):
-            tj = TT[j]
-            if (i != j) :
-                prod = prod * ((t - tj)/(ti - tj))
-        l[i] = prod
-    L = np.asarray(l)
-    Y = np.asarray(YY)
-    return np.dot(np.transpose(Y),L)
+    l = [0 for _ in range(len(YY))]
+    for i in range(len(YY)):
+        for j in range(len(YY)):
+            if i != j:
+                l[i] = (t - TT[j]) / (TT[i] - TT[j])
+    P = np.dot(YY, l)
+    return P
 
 
 #####################################################
@@ -51,11 +46,11 @@ def neville(YY:np.ndarray, TT: np.ndarray, t: float) -> float:
     Returns:
         float: The interpolated value at x.
     """
-    n = len(TT)
+
     P = [YY[i] for i in range(len(YY))]
-    for j in range(1,n):
-        for i in range(n-j):
-            P[i] = ((TT[i+j]-t)*P[i]+(t - TT[i])*P[i+1])/(TT[i+j] - TT[i])
+    for j in range(1, len(YY)): 
+        for i in range(len(YY) - j): 
+            P[i] = ((TT[i + j] - t) * P[i] + (t - TT[i]) * P[i + 1]) / (TT[i] - TT[i + j])
     return P[0]
 
 #####################################################
@@ -100,9 +95,9 @@ def regular_parametrisation(nb_point: int) -> List[float]:
         List[float]: A list containing the regular abscissas.
     """
 
-    Ind = [(i/(nb_point-1)) for i in range(nb_point)]
+    # TODO
 
-    return Ind
+    return [1]
 
 def distance_parametrisation(XX: List[float], YY: List[float]) -> List[float]:
     """
@@ -116,14 +111,19 @@ def distance_parametrisation(XX: List[float], YY: List[float]) -> List[float]:
     Returns:
         List[float]: A list containing the abscissas proportional to the distances.
     """
-    n = len(XX)
-    X = np.array(XX)
-    Y = np.array(YY)
-    Ind = np.zeros((n,1))
-    Ind[1:n] = np.sqrt(np.square((X[0:n-1]-X[1:n]))+np.square((Y[0:n-1]-Y[1:n])))
-    Ind = np.cumsum(Ind)
-    Ind = Ind*(1/Ind[n-1])
-    return Ind
+    # TODO
+
+
+
+
+
+
+
+
+
+
+
+    return [1]
 
 
 
@@ -140,14 +140,19 @@ def parametrisation_racinedistance(XX: List[float], YY: List[float]) -> List[flo
         List[float]: A list containing the abscissas proportional to the square roots of the distances.
     """
 
-    n = len(XX)
-    Ind = np.zeros((n,1))
-    X = np.array(XX)
-    Y = np.array(YY)
-    Ind[1:n] = np.sqrt(np.sqrt(np.square((X[0:n-1]-X[1:n]))+np.square((Y[0:n-1]-Y[1:n]))))
-    Ind = np.cumsum(Ind)
-    Ind = Ind*(1/Ind[n-1])
-    return Ind
+    # TODO
+
+
+
+
+
+
+
+
+
+
+
+    return [1]
 
 
 
