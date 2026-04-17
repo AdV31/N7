@@ -13,7 +13,14 @@ n=length(P(:,1));
 % Tests sur alpha et v
 
 % Calcul de A
+if (alpha<0 || alpha>1 || any(v<=0) || norm(v,1)~=1)
+    A=[];
+    err=1;
+    return
+end
+
 A=alpha*P + (1-alpha)*v*ones(1,n);
 err=0;
+
 
 end
