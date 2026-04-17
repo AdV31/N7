@@ -14,11 +14,14 @@ kmax = 1000;
 k = 0;
 e = ones(n,1);
 qr = Q*r;
-Ar = alpha*(qr + (1/n)*e*(1 - e'*qr)) + (1-alpha)*v;
+eqr = sum(qr)
+Ar = alpha*(qr + ((1/n)*(1 - eqr))*e) + (1-alpha)*v;
 
-while norm(Ar - r) >= eps*norm(r) && kmax > k
+while norm(Ar - r,1) >= eps*norm(r,1) && kmax > k
     qr = Q*r;
-    q = alpha*(qr + (1/n)*e*(1 - e'*qr)) + (1-alpha)*v;
+    eqr = sum(qr)
+    Ar = alpha*(qr + ((1/n)*(1 - eqr))*e) + (1-alpha)*v;
+    q = Ar;
     r = q/norm(q);
 
     k=k+1;
