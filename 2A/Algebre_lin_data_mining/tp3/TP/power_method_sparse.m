@@ -13,8 +13,10 @@ r=ones(n,1)./n;
 kmax = 1000;
 k = 0;
 e = ones(n,1);
+qr = Q*r;
+Ar = alpha*(qr + (1/n)*e*(1 - e'*qr)) + (1-alpha)*v;
 
-while norm(1+(1-alpha)*v*e'*r-r) >= eps*norm(r) && kmax > k
+while norm(Ar - r) >= eps*norm(r) && kmax > k
     qr = Q*r;
     q = alpha*(qr + (1/n)*e*(1 - e'*qr)) + (1-alpha)*v;
     r = q/norm(q);
